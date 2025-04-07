@@ -1,0 +1,25 @@
+{
+
+    "description": "Allows threads to be tracked across journals.",
+    "manifest_version": 2,
+    "name": "Atlas",
+    "version": "1.0.0",
+    "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/borderify",
+    "icons": {
+      "48": "icons/notebook.png"
+    },
+  
+    "content_scripts": [
+      {
+        "matches": ["*://*.dreamwidth.org/*"],
+        "js": ["atlas.js"]
+      }
+    ],
+
+    "browser_action": {
+        "browser_style": true,
+        "default_icon": "icons/notebook.png",
+        "default_title": "Atlas!",
+        "default_popup": "popup/popup.html"
+      }
+  }

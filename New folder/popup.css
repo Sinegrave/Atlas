@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+body {
+    font-family: "Nunito Sans", sans-serif;
+    padding: 20px;
+    width: 540px;
+}
+
+button {
+    border: solid 1px #aaa;
+    padding: 1%;
+    border-radius: 3px;
+    font-size: 10px;
+    background-color: #fff;
+}
+
+.newThread {
+    display: flex; 
+    flex-direction: row; 
+    gap: 30px; 
+    justify-content: space-between; 
+    border-bottom: solid 1px #aaa;
+    align-items: center;
+    text-align: center;
+}
+
+.newThread div {
+    width: 20%;
+    overflow: hidden;
+}
+
+.characterName {
+    padding: 1%;
+    width: fit-content;
+    border-radius: 3px;
+    background-color: paleturquoise;
+}
+
+.turnCounterYou {
+    background-color: rgb(238, 228, 175);
+    border-radius: 3px;
+    padding: 1%;
+}
+
+.turnCounterThem {
+    background-color: rgb(175, 238, 203);
+    border-radius: 3px;
+    padding: 1%;
+}

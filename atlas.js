@@ -1,4 +1,11 @@
 /* THIS IS DAUNTING!!!! */
+console.log("Fear and loathing.");
+
+document.addEventListener("click", (e) => {
+        document.body.style.border = "5px solid red";
+        console.log("In Las Vegas.");
+        }
+); 
 
 /* Find a comment, any comment, and add a button that says 'add to Atlas'. */
     const bottomRow = document.getElementsByClassName("link reply first-item");
@@ -73,51 +80,22 @@
     /* Obtain commment count */
     function commentCount(x){
         /* Find parent link. */
-        var snail = document.getElementById("comment-" + x).getElementsByClassName("link commentparent");
-        var butterfly = snail[0].getElementsByTagName("a")[0] + "";
-        console.log(butterfly);
-        cheetah(butterfly);
+        var snail = document.getElementById("comment-" + x).getElementsByClassName("link threadroot");
+        var butterfly = snail[0].getElementsByTagName("a")[0].baseURI + "";
+        var xhttp = new XMLHttpRequest();
 
-        /* Find open parent link. */
-        var xhr = new XMLHttpRequest();
-
-        /* If a 'parent' link is present, reload. */
-        var hasParent = true;
-        
-        function cheetah(x){
-        xhr.open('GET', x, true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4)  { 
-                let cat = xhr.responseText;
-                let hat = cat.match('Reply to this</a></li><li class="link thread"><a');
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let cat = xhttp.responseText;
+                let hat = cat.match(/<li class="link commentparent">/gi);
                 console.log(hat.length);
-                if (hat.length == 1) {
-                    hasParent = false;
-                }
-                else {
-                    hasParent = true;
-                }
-
-                if (hasParent = true){
-                    var broom = cat.match(/<li class="link commentparent"></gi);
-                    var sheep = broom[0];
-                    cheetah(broom);
-                }
-
-                else {
-                    let text = xhr.responseText;
-                    let result = text.match(/commentparent/gi);
-                    console.log(result.length);
-                }
             }
         };
-        xhr.send(null);  
-    }
-}
-    
-        /* Find total comment count. */
-        
 
+        xhttp.open("GET", butterfly, true);
+        xhttp.send();
+    }
+            
     /* Obtain turn. */
         function journalName(x){
         const snail = document.getElementById("comment-" + x).getElementsByTagName("a");

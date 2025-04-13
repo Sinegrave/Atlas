@@ -11,14 +11,14 @@
   
     "content_scripts": [
       {
-        "matches": ["*://*.dreamwidth.org/*"],
+        "matches": ["<all_urls>"],
         "js": ["atlas.js"]
       }
     ],
 
     "browser_action": {
         "browser_style": true,
-        "default_icon": "icons/notebook.png",
+        "default_icon": "icons/cd.png",
         "default_title": "Atlas!",
         "default_popup": "popup/popup.html"
       }

@@ -10,23 +10,43 @@
 <body>
     <div id="popup-content">
         <center>
-            Keep track of threads here!
+            <h1>DW Thread Tracker</h1>
+             <button id="refreshAtlas">Refresh</button> <button id="manualAdd">Quick Add</button> <button id="characterEdits">Edit Character(s)</button> <button id="atlasOptions">Options</button> 
+             <br>
+             <div id="atlasOptionsBar"><br>
+                
+                <input type="checkbox" id="charaNameOptions" value="true">
+                <label for="vehicle1"> Name</label> 
+            
+                <input type="checkbox" id="threadTitleOption" value="true">
+                <label for="vehicle1"> Thread Title</label>
+            
+                <input type="checkbox" id="dateOption" value="false">
+                <label for="vehicle1"> Date Started</label>
 
-            <!-- List of characters -->
-             <br>
-             <br>
-             <button id="refreshAtlas">Refresh</button> <button id="manualAdd">Quick Add</button> <button id="characterEdits">Edit Character(s)</button> 
-             <br>
+                <input type="checkbox" id="urlOption" value="true">
+                <label for="vehicle1"> URL</label>
+            
+                <input type="checkbox" id="turnOption" value="true">
+                <label for="vehicle1"> Turn Counter</label>
+            
+                <input type="checkbox" id="commentTotalOption" value="true">
+                <label for="vehicle1"> Comment Total</label>
+
+                <input type="checkbox" id="myCommentsOptions" value="true">
+                <label for="vehicle1"> My Comments</label></div>
              <br>
             <!-- Thread table -->
              <div style="display: flex; flex-direction: column;">
                 <!-- Thread header -->
                 <div class="newThread">
-                    <div>Name</div>
-                    <div>Thread Title</div>
-                    <div>URL</div>
-                    <div>Your Turn / Their Turn</div>
-                    <div>Comment Total</div>
+                    <div id="nameColumn">Name</div>
+                    <div id="titleColumn">Thread Title</div>
+                    <div id="dateColumn">Comment Total</div>
+                    <div id="urlColumn">URL</div>
+                    <div id="turnColumn">Your Turn / Their Turn</div>
+                    <div id="totalColumn">Comment Total</div>
+                    <div id="myColumn">Comment Total</div>
                 </div>
                 <!-- Thread header -->
                 <!-- New thread -->
@@ -50,6 +70,7 @@
                 <!-- New thread -->
                  <div id="newThreadLine"></div>
              </div>
+             <br>
             <!-- Full screen button -->
             <button id="fullScreenVersion">Fullscreen View</button>
         </center>

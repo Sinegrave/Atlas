@@ -1,17 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Rubik+Bubbles&display=swap');
 
 body {
-    font-family: "Nunito Sans", sans-serif;
+    font-family: "Lato", sans-serif;
     padding: 20px;
     width: 540px;
+}
+
+h1 {
+    font-family: "Rubik Bubbles", system-ui;
 }
 
 button {
     border: solid 1px #aaa;
     padding: 1%;
-    border-radius: 3px;
+    border-radius: 5px;
     font-size: 10px;
     background-color: #fff;
+}
+
+button:hover {
+    background-color: #aaa;
+}
+
+#atlasOptionsBar {
+    display: none;
+}
+
+#dateColumn {
+    display: none;
+}
+
+#myColumn {
+    display: none;
 }
 
 .newThread {

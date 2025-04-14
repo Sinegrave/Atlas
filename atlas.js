@@ -3,15 +3,102 @@
 /* POP-UP */
 const threads = [];
 
-const hermitCrab = document.getElementById("fullScreenVersion");
+/* HOLY SHIT. */
+document.addEventListener("click", (e) => {
+    if (e.target.tagName == "BUTTON") {
+        const bee = e.target.id;
+        buttonToFunction(bee);
 
-if (hermitCrab !== undefined && hermitCrab !== null){
-    addEventListener("click", doThings);
+        function buttonToFunction(x){
+            switch (x) {
+                case "refreshAtlas":
+                    console.log("brisket");
+                    return;
+                case "manualAdd":
+                   console.log("lunch");
+                   return;
+                case "characterEdits":
+                    console.log("cereal");
+                    return;
+                case "atlasOptions":
+                    toggle("atlasOptionsBar");
+                    return;
+                case "fullScreenVersion":
+                    console.log("eggWhites");
+                    return;
+            }
+        }
+    }
+
+    if (e.target.tagName == "INPUT") {
+        const bush = e.target.id;
+        columnToggle(bush);
+        function columnToggle(x){
+        switch (x) {
+            case "charaNameOptions":
+                toggle("nameColumn");
+                return;   
+            case "threadTitleOption":
+                console.log("brisket");
+                return;
+            case "dateOption":
+               console.log("lunch");
+               return;
+            case "urlOption":
+                console.log("cereal");
+                return;
+            case "turnOption":
+                console.log("eggWhites");
+                return;
+            case "commentTotalOption":
+                console.log("eggWhites");
+                return;
+            case "myCommentsOptions":
+                console.log("cereal");
+                return;    
+        }
+    }
+}
+});
+
+/**
+ * Function to check for updates.
+ */
+function refresh(){
+
 }
 
-function doThings() {
-    console.log("Fear and loathing.");
-} 
+/**
+ * Function to add a new thread via a link.
+ */
+function quickAdd(){
+
+}
+
+/**
+ * Function to edit character name/color.
+ */
+function edit(){
+
+}
+
+
+/**
+ * Function to open the options panel.
+ */
+function toggle(z){
+    var x = document.getElementById(z);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+/**
+ *  Function for the fullscreen panel.
+ */
+
 
 /**
  * Function to create a new entry.

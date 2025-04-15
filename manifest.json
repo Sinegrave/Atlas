@@ -16,6 +16,15 @@
       }
     ],
 
+    "permissions": [
+      "storage"
+    ],
+
+    "options_ui": {
+      "page": "fullscreen/fullscreen.html",
+      "browser_style": true
+    },
+
     "browser_action": {
         "browser_style": true,
         "default_icon": "icons/cd.png",

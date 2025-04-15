@@ -1,6 +1,13 @@
 /* THIS IS DAUNTING!!!! */
 
-/* POP-UP */
+/**
+ * 
+ * 
+ *  POP-UP SIDE
+ * 
+ * 
+ *  */
+
 const threads = [];
 
 /* HOLY SHIT. */
@@ -104,30 +111,30 @@ function toggle(z){
  * Function to create a new entry.
  */
 
-function NewThread (name, threadTitle, url, turn, comments) {
+function NewThread (name, threadTitle, url, turn, totalComments, myComments, date) {
     this.name = name;
     this.threadTitle = threadTitle;
     this.url = url;
     this.turn = turn;
-    this.comments = comments}
+    this.totalComments = totalComments
+    this.myComments = myComments
+    this.date = date
+}
 
-const newFullThread = {
-    name: "",
-    threadTitle: "",
-    dateStarted: "",
-    mostRecentReply: "",
-    url: "",
-    turn: "",
-    totalComments: "",
-    myComments: "",}
+/**
+ * 
+ * 
+ * DREAMWIDTH SIDE 
+ * 
+ * 
+ * */
 
-
-/* DREAMWIDTH */
-/* Find a comment, any comment, and add a button that says 'add to Atlas'. */
+/* Find a comment, any comment, and add a button that says 'add to tracker'. */
     const bottomRow = document.getElementsByClassName("link reply first-item");
     const topLevel = document.getElementsByClassName("entry-readlink first-item");
     links();
     linksToo();
+    addThread();
 
     function links(){
         let j = 0;
@@ -160,7 +167,7 @@ const newFullThread = {
         if (beer !== undefined && beer !== null){
             node.setAttribute("id", beer);
             node.setAttribute("class", classy);
-            const textnode = document.createTextNode("Add to Atlas");
+            const textnode = document.createTextNode("Add to Tracker");
             node.appendChild(textnode);    
             return node; 
         }
@@ -168,71 +175,106 @@ const newFullThread = {
         else {
             return node;
         }
-        
     }
 
-    /* Click on said comment and have a thing happen. */
-    const boxes = document.querySelectorAll('.atlasLink');
-    boxes.forEach(atlasLink => {
+    /** 
+     * 
+     *  The meat and potatoes! 
+     * 
+     *  Click on said comment and have a thing happen. 
+     *  getTotalComments() and getDateStarted() have a delay to them. 
+     * 
+     * 
+     * */
+    
+    function addThread() {
+        const boxes = document.querySelectorAll('.atlasLink');
+        boxes.forEach(atlasLink => {
         atlasLink.addEventListener('click', function handleClick(event) {
-            const name = journalName(this.id);
+            const name = getJournalName(this.id);
             const threadTitle = this.id;
-            const url = threadLink(this.id);
-            const turn = "0";
-            const comments = commentCount(this.id);
-
-            console.log (threadTitle);
+            const url = getThreadLink(this.id);
+            const turn = determineTurn();
+            const totalComments = getTotalComments(this.id);
+            const myComments = "0";
+            const date = getDate(this.id);
         
-            const a = new NewThread(name, threadTitle, url, turn, comments);
+            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date);
 
             /* Adds this thread to the array of threads. */
             threads.push(a); 
-
-            console.log(name);
-            console.log(threadTitle);
-            console.log(url);
             console.log(threads);
+
+            /* Stores the array in local storage. */
         });
     });
+    }
 
     /* Obtain thread link. */
-    function threadLink(x){
+    function getThreadLink(x){
         const snail = document.getElementById("comment-" + x).getElementsByTagName("a");
-        console.log(snail[3] + "");
         return snail[3] + "";
     }
 
-    /* Obtain commment count */
-    function commentCount(x){
-        /* Find parent link. */
-        var snail = document.getElementById("comment-" + x).getElementsByClassName("link threadroot");
-        var butterfly = snail[0].getElementsByTagName("a")[0].baseURI + "";
-        var xhttp = new XMLHttpRequest();
-        let cat;
-        let hat;
-        
+    /*  Find parent link, return a block of text from the top-most thread.  */
+    function goToFirstComment(x){
+        return new Promise((resolve) => {
+                var snail = document.getElementById("comment-" + x).getElementsByClassName("link threadroot");
+                var butterfly = snail[0].getElementsByTagName("a")[0].baseURI + "";
+                var xhttp = new XMLHttpRequest();
 
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                cat = xhttp.responseText;
-                hat = cat.match(/<li class="link commentparent">/gi);
-                console.log(hat.length);
-                return hat.length;
-            }
-            else {
-                return 0;
-            }
-            
+                var bee = "Nothing";
+                xhttp.open("GET", butterfly, true);
+                xhttp.send();
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                         bee = xhttp.responseText;
+                }
         };
 
-        xhttp.open("GET", butterfly, true);
-        xhttp.send();
-             
+        setTimeout(() => {
+              resolve(bee);
+            }, 2000);
+        });
     }
+
+    /* Obtain total comments. */
+    async function getTotalComments(x){
+        const apple = await goToFirstComment(x);
+        var hat = apple.match(/<li class="link commentparent">/gi);
+        console.log(hat.length);
+        return hat.length;
+    }
+
+    /** 
+     * Tell the user whose turn it is.
+     * If the most recent comment matches that off the journal makine the query, not their turn.
+     *
+     */
+
+    function determineTurn(){
+        var thisJournal = getJournalName;
+        var otherJournal = "functionToGetLastCommentUsernameGoesHere"
+
+        if (thisJournal != otherJournal){
+            return "Their turn."
+        }
+
+        else {
+            return "Your turn!"
+        }
+    }
+     
             
     /* Obtain journal name. */
-        function journalName(x){
+        function getJournalName(x){
         const snail = document.getElementById("comment-" + x).getElementsByTagName("a");
         const ghost = snail[2].innerText;
         return ghost;
+    }
+
+    /* Obtain date started. */
+    async function getDate(x){
+        return 0;
     }

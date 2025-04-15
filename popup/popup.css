@@ -1,25 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Rubik+Bubbles&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Redacted+Script:wght@300;400;700&display=swap');
+
 
 body {
     font-family: "Lato", sans-serif;
     padding: 20px;
+    font-size: 13px;
     width: 540px;
 }
 
 h1 {
-    font-family: "Rubik Bubbles", system-ui;
+    font-family: "Redacted Script", serif;
+    font-size: 50px;
+    margin: auto;
 }
 
 button {
     border: solid 1px #aaa;
     padding: 1%;
     border-radius: 5px;
-    font-size: 10px;
+    font-size: 12px;
     background-color: #fff;
 }
 
 button:hover {
-    background-color: #aaa;
+    background-color: #fabaaa;
 }
 
 #atlasOptionsBar {

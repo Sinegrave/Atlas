@@ -16,9 +16,25 @@
       }
     ],
 
+    "background": {
+     "scripts": ["background-script.js"],
+     "persistent": false,
+     "type": "module" 
+    },
+
     "permissions": [
-      "storage"
+      "storage", "tabs"
     ],
+
+    "commands": {
+      "saveCurrentThread": {
+        "suggested_key": {
+          "default": "Ctrl+Alt+S"
+        },
+
+        "description": "Keyboard shortcut for quickly saving a thread."
+      }
+    },
 
     "options_ui": {
       "page": "fullscreen/fullscreen.html",
@@ -31,4 +47,5 @@
         "default_title": "Atlas!",
         "default_popup": "popup/popup.html"
       }
+      
   }

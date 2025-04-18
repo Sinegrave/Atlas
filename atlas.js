@@ -218,33 +218,50 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     /*  Find parent link, return a block of text from the top-most thread.  */
     function goToFirstComment(x){
+        var link;
         return new Promise((resolve) => {
-                var snail = document.getElementById("comment-" + x).getElementsByClassName("link threadroot");
-                var butterfly = snail[0].getElementsByTagName("a")[0].baseURI + "";
+            createRequest(getParent(x));
+                function getParent(y){
+                var snail = document.getElementById("comment-" + y).getElementsByClassName("link commentparent");
+                var butterfly = snail[0].getElementsByTagName("a")[0];
+                return butterfly;
+            }
+            
+            function createRequest(x){
                 var xhttp = new XMLHttpRequest();
-
-                var bee = "Nothing";
-                xhttp.open("GET", butterfly, true);
+                xhttp.open("GET", x, true);
+                xhttp.responseType = "document";
                 xhttp.send();
-
                 xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                         bee = xhttp.responseText;
-                }
-        };
+                  if (this.readyState == 4 && this.status == 200) {
+                       var blockText = xhttp.response;
+                       var id = blockText.getElementsByClassName("dwexpcomment")[0].id;
+                       var breech = blockText.getElementById("comment-" + id).getElementsByClassName("link commentparent");
+                       if ( breech[0] == undefined){
+                          link = blockText;
+                       }
+                       else {
+                          createRequest(getParent(id));
+                       }
+                    }
+                };
+            }
 
-        setTimeout(() => {
-              resolve(bee);
-            }, 2000);
-        });
+    setTimeout(() => {
+          resolve(link);
+        }, 2000);
+    });
     }
 
     /* Obtain total comments. */
     async function getTotalComments(x){
-        const apple = await goToFirstComment(x);
+        goToFirstComment(x);
+        
+        /** const apple = await goToFirstComment(x);
         var hat = apple.match(/<li class="link commentparent">/gi);
         console.log(hat.length);
-        return hat.length;
+        return hat.length; */
+        return 0;
     }
 
     /** 

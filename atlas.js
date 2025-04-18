@@ -150,11 +150,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     function linksToo(){
         let m = 0;
-        while (m < topLevel.length){
+        while (m <= topLevel.length){
             const sock = topLevel[m];
             if (sock !== undefined && sock !== null){
                 sock.innerHTML += ")​    ​ ​    (";
-                sock.appendChild(createNode(m));
+                sock.appendChild(createBigNode(m));
             }
             m++;
         }
@@ -176,6 +176,24 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             return node;
         }
     }
+
+    function createBigNode(x){
+        const node = document.createElement("a");
+        const beer = window.location.href;
+        const classy = "atlasLink";
+        if (beer !== undefined && beer !== null){
+            node.setAttribute("id", beer);
+            node.setAttribute("class", classy);
+            const textnode = document.createTextNode("Add to Tracker");
+            node.appendChild(textnode);    
+            return node; 
+        }
+
+        else {
+            return node;
+        }
+    }
+
 
     /** 
      * 

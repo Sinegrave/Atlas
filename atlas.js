@@ -10,8 +10,16 @@
 
 const threads = [];
 
+/**
+ * 
+ * Put the threads in the tracker.
+ * 
+ */
+
+
 /* HOLY SHIT. */
 document.addEventListener("click", (e) => {
+    
     if (e.target.tagName == "BUTTON") {
         const bee = e.target.id;
         buttonToFunction(bee);
@@ -66,6 +74,7 @@ document.addEventListener("click", (e) => {
         }
     }
 }
+
 });
 
 /**
@@ -120,6 +129,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     this.myComments = myComments
     this.date = date
 }
+
 
 /**
  * 
@@ -226,6 +236,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             console.log(threads);
 
             /* Stores the array in local storage. */
+            
         });
     });
     }

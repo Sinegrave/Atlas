@@ -179,8 +179,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     function createBigNode(x){
         const node = document.createElement("a");
-        const beer = window.location.href;
-        const classy = "atlasLink";
+        const beer = document.getElementsByClassName("entry")[0].id;
+        const classy = "topLink";
         if (beer !== undefined && beer !== null){
             node.setAttribute("id", beer);
             node.setAttribute("class", classy);
@@ -208,14 +208,16 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     function addThread() {
         const boxes = document.querySelectorAll('.atlasLink');
         boxes.forEach(atlasLink => {
-        atlasLink.addEventListener('click', function handleClick(event) {
+        atlasLink.addEventListener('click', async function handleClick(event) {
+            const topLevel = await goToFirstComment(this.id); // Document/XML version of the top-level
+
             const name = getJournalName(this.id);
             const threadTitle = this.id;
             const url = getThreadLink(this.id);
-            const turn = determineTurn();
-            const totalComments = getTotalComments(this.id);
-            const myComments = "0";
-            const date = getDate(this.id);
+            const turn = determineTurn(topLevel);
+            const totalComments = getTotalComments(topLevel);
+            const myComments = getMyComments(topLevel, this.id);
+            const date = getDate(topLevel);
         
             const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date);
 
@@ -235,12 +237,12 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     }
 
     /*  Find parent link, return a block of text from the top-most thread.  */
-    function goToFirstComment(x){
+    async function goToFirstComment(x){
         var link;
         return new Promise((resolve) => {
-            createRequest(getParent(x));
-                function getParent(y){
-                var snail = document.getElementById("comment-" + y).getElementsByClassName("link commentparent");
+            createRequest(getParent(x, document));
+                function getParent(y, z){
+                var snail = z.getElementById("comment-" + y).getElementsByClassName("link commentparent");
                 var butterfly = snail[0].getElementsByTagName("a")[0];
                 return butterfly;
             }
@@ -249,53 +251,56 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
                 var xhttp = new XMLHttpRequest();
                 xhttp.open("GET", x, true);
                 xhttp.responseType = "document";
-                xhttp.send();
-                xhttp.onreadystatechange = function() {
-                  if (this.readyState == 4 && this.status == 200) {
-                       var blockText = xhttp.response;
+                xhttp.onload = function(){
+                    var blockText = xhttp.response;
                        var id = blockText.getElementsByClassName("dwexpcomment")[0].id;
                        var breech = blockText.getElementById("comment-" + id).getElementsByClassName("link commentparent");
                        if ( breech[0] == undefined){
                           link = blockText;
+                          resolve(link);
                        }
                        else {
-                          createRequest(getParent(id));
+                          createRequest(getParent(id, blockText));
                        }
-                    }
-                };
+                }
+                xhttp.send();
             }
-
-    setTimeout(() => {
-          resolve(link);
-        }, 2000);
     });
     }
 
     /* Obtain total comments. */
-    async function getTotalComments(x){
-        goToFirstComment(x);
-        
-        /** const apple = await goToFirstComment(x);
-        var hat = apple.match(/<li class="link commentparent">/gi);
-        console.log(hat.length);
-        return hat.length; */
-        return 0;
+    function getTotalComments(x){
+        var boomer = x.getElementsByClassName("link commentparent");
+        return boomer.length;
+    }
+
+    /* Obtain comments made by user. */
+    function getMyComments(x, y){
+        var boomer = x.getElementsByClassName("ljuser");
+        var jeans = -1;
+        var myJournal = getJournalName(y);
+        for (var i = 0; i < boomer.length; i++){
+            if (boomer[i].innerText == myJournal){
+                jeans = jeans + 1;
+            }
+        }
+        return jeans;
     }
 
     /** 
+     * 
      * Tell the user whose turn it is.
      * If the most recent comment matches that off the journal makine the query, not their turn.
      *
      */
 
-    function determineTurn(){
-        var thisJournal = getJournalName;
-        var otherJournal = "functionToGetLastCommentUsernameGoesHere"
-
-        if (thisJournal != otherJournal){
+    function determineTurn(x){
+        var boomer = x.getElementsByClassName("ljuser");
+        var myJournal = boomer[boomer.length-1].innerText;
+        var otherJournal = boomer[boomer.length-2].innerText;
+        if (otherJournal == myJournal){
             return "Their turn."
         }
-
         else {
             return "Your turn!"
         }
@@ -303,13 +308,14 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      
             
     /* Obtain journal name. */
-        function getJournalName(x){
+    function getJournalName(x){
         const snail = document.getElementById("comment-" + x).getElementsByTagName("a");
         const ghost = snail[2].innerText;
         return ghost;
     }
 
     /* Obtain date started. */
-    async function getDate(x){
-        return 0;
+    function getDate(x){
+        var boomer = x.getElementsByClassName("datetime")
+        return boomer[1].innerText;
     }

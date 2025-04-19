@@ -120,7 +120,7 @@ function toggle(z){
  * Function to create a new entry.
  */
 
-function NewThread (name, threadTitle, url, turn, totalComments, myComments, date) {
+function NewThread (name, threadTitle, url, turn, totalComments, myComments, date, description, altName) {
     this.name = name;
     this.threadTitle = threadTitle;
     this.url = url;
@@ -128,6 +128,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     this.totalComments = totalComments
     this.myComments = myComments
     this.date = date
+    this.description = description;
+    this.altName = altName;
 }
 
 
@@ -228,14 +230,19 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const totalComments = getTotalComments(topLevel);
             const myComments = getMyComments(topLevel, this.id);
             const date = getDate(topLevel);
+            const description = "";
+            const altName = "";
         
-            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date);
+            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date, description, altName);
 
             /* Adds this thread to the array of threads. */
             threads.push(a); 
-            console.log(threads);
 
             /* Stores the array in local storage. */
+            localStorage.setItem(1, threads);
+            let bree = localStorage.getItem(1);
+            console.log(bree);
+            
             
         });
     });

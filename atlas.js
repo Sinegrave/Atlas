@@ -39,8 +39,10 @@ document.addEventListener("click", (e) => {
                     toggle("atlasOptionsBar");
                     return;
                 case "fullScreenVersion":
-                    console.log("eggWhites");
+                    window.open("/fullscreen.html", "_blank", "width=800,height=800,scrollbars=no");
                     return;
+                case "learnMorePage":
+                    window.open("/learnmore.html", "_blank", "width=500,height=500,scrollbars=no");
             }
         }
     }
@@ -51,25 +53,25 @@ document.addEventListener("click", (e) => {
         function columnToggle(x){
         switch (x) {
             case "charaNameOptions":
-                toggle("nameColumn");
+                toggle("charaName");
                 return;   
             case "threadTitleOption":
-                console.log("brisket");
+                toggle("threadDescr");
                 return;
             case "dateOption":
-               console.log("lunch");
+                toggle("dateStarted");
                return;
             case "urlOption":
-                console.log("cereal");
+                toggle("URL");
                 return;
             case "turnOption":
-                console.log("eggWhites");
+                toggle("turnCounter");
                 return;
             case "commentTotalOption":
-                console.log("eggWhites");
+                toggle("commentsTotal");
                 return;
             case "myCommentsOptions":
-                console.log("cereal");
+                toggle("myComments");
                 return;    
         }
     }
@@ -118,9 +120,10 @@ function toggle(z){
 
 /**
  * Function to create a new entry.
+ * Has ten parameters. 
  */
 
-function NewThread (name, threadTitle, url, turn, totalComments, myComments, date, description, altName) {
+function NewThread (name, threadTitle, url, turn, totalComments, myComments, date, description, altName, charColor) {
     this.name = name;
     this.threadTitle = threadTitle;
     this.url = url;
@@ -130,6 +133,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     this.date = date
     this.description = description;
     this.altName = altName;
+    this.charColor = charColor;
 }
 
 
@@ -206,6 +210,59 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
     }
 
+    function createNewRow (x){
+        var cheese = document.getElementById("charaName");
+        const div = document.createElement('div');
+        div.append(x.name);
+        cheese.innerHTML ="hello";
+        cheese.innerHTML += div;
+    }
+
+     /**
+     * 
+     * Show currently saved threads from past sessions.
+     * 
+     */ 
+
+     function getThreads (){
+        var gettingAllThreads = browser.storage.local.get(null);
+        gettingAllThreads.then((results) => {
+            let threadsList = Object.keys(results);
+            /* For every item in the array, display. */
+            for (let individualThread of threadsList) {
+                let threadContents = results[individualThread];
+                var newDiv = document.createElement("div");
+
+                var lettuce = document.getElementById("dateStarted");
+                var cheese = document.getElementById("charaName");
+                var tomato = document.getElementById("threadDescr");
+                var onion = document.getElementById("URL");
+                var pepper = document.getElementById("turnCounter");
+                var pickles = document.getElementById("commentsTotal");
+                var oil = document.getElementById("myComments");
+
+                
+                cheese.innerHTML += '<div>' + threadContents.name+ '</div>';
+                lettuce.innerHTML += '<div>' + threadContents.date + '</div>';
+                onion.innerHTML += '<div>' + threadContents.url + '</div>';
+                pepper.innerHTML += '<div>' + threadContents.turn + '</div>';
+                pickles.innerHTML += '<div>' + threadContents.totalComments + '</div>';
+                tomato.innerHTML += '<div>' + threadContents.description + '</div>';
+                oil.innerHTML += '<div>' + threadContents.myComments + '</div>';
+
+        }})}
+    /** 
+     * 
+     * Add a new thread to local storage.
+     */
+
+    function storeThread(x, y) {
+        let storeNewThread = browser.storage.local.set({ [x] : y });
+        storeNewThread.then(() => {
+            getThreads();
+        });
+
+    }
 
     /** 
      * 
@@ -224,7 +281,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const topLevel = await goToFirstComment(this.id); // Document/XML version of the top-level
 
             const name = getJournalName(this.id);
-            const threadTitle = this.id;
+            /* CHANGE THIS TO BE THE TOP-MOST THREAD ID */ 
+            
+            const threadTitle = this.id; 
             const url = getThreadLink(this.id);
             const turn = determineTurn(topLevel);
             const totalComments = getTotalComments(topLevel);
@@ -232,18 +291,15 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const date = getDate(topLevel);
             const description = "";
             const altName = "";
+            const charColor = "";
         
-            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date, description, altName);
+            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date, description, altName, charColor);
 
             /* Adds this thread to the array of threads. */
             threads.push(a); 
 
             /* Stores the array in local storage. */
-            localStorage.setItem(1, threads);
-            let bree = localStorage.getItem(1);
-            console.log(bree);
-            
-            
+            storeThread(threadTitle, a);  
         });
     });
     }

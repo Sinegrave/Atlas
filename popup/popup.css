@@ -25,29 +25,15 @@ button {
 }
 
 button:hover {
-    background-color: #fabaaa;
+    background-color: #e5e5e5;
 }
 
 #atlasOptionsBar {
     display: none;
 }
 
-#dateColumn {
-    display: none;
-}
-
-#myColumn {
-    display: none;
-}
-
-.newThread {
-    display: flex; 
-    flex-direction: row; 
-    gap: 30px; 
-    justify-content: space-between; 
-    border-bottom: solid 1px #aaa;
-    align-items: center;
-    text-align: center;
+.contentHolder {
+    
 }
 
 .newThread div {

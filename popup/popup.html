@@ -35,45 +35,22 @@
                 <input type="checkbox" id="myCommentsOptions" value="true">
                 <label for="vehicle1"> My Comments</label></div>
              <br>
-            <!-- Thread table -->
-             <div style="display: flex; flex-direction: column;">
-                <!-- Thread header -->
-                <div class="newThread">
-                    <div id="nameColumn">Name</div>
-                    <div id="titleColumn">Thread Title</div>
-                    <div id="dateColumn">Comment Total</div>
-                    <div id="urlColumn">URL</div>
-                    <div id="turnColumn">Your Turn / Their Turn</div>
-                    <div id="totalColumn">Comment Total</div>
-                    <div id="myColumn">Comment Total</div>
-                </div>
-                <!-- Thread header -->
-                <!-- New thread -->
-                <div class="newThread">
-                    <div class="characterName">Butcher</div>
-                    <div>Meeting MM</div>
-                    <div>https://duplicitylog.dreamwidth.org/2108970.html?thread=226468394#cmt226468394</div>
-                    <div class="turnCounterYou">You're up!</div>
-                    <div>88</div>
-                </div>
-                <!-- New thread -->
-                
-                <!-- New thread -->
-                <div class="newThread">
-                    <div class="characterName" style="background-color: rgb(241, 213, 213);">Slade</div>
-                    <div>Rose kicking ass.</div>
-                    <div>https://bakerstreet.dreamwidth.org/10783368.html?thread=4372675976#cmt4372675976</div>
-                    <div class="turnCounterThem">Their turn.</div>
-                    <div>5</div>
-                </div>
-                <!-- New thread -->
-                 <div id="allThreads"></div>
-             </div>
+
+                    <br>
+             <div style="align-content: center; display: grid; grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 2fr ">
+                <div id="charaName"></div>
+                <div id="threadDescr"></div>
+                <div id="dateStarted"></div>
+                <div id="URL"></div>
+                <div id="turnCounter"></div>
+                <div id="commentsTotal"></div>
+                <div id="myComments"></div>
+                </div>         
              <br>
             <!-- Full screen button -->
             <button id="fullScreenVersion">Fullscreen View</button>
-    </div>
 
+    </div>
     <script src="/atlas.js"></script>
 </body>
 </html>

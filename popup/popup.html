@@ -9,8 +9,11 @@
 </head>
 <body>
     <div id="popup-content">
+        
             <div style="text-align: center!important;"><h1>&nbsp DW Thread Tracker</h1></div>
-            &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp<button id="refreshAtlas">Refresh</button> <button id="manualAdd">Quick Add</button> <button id="characterEdits">Edit Character(s)</button> <button id="atlasOptions">Options</button> <button id="learnMorePage">Learn More</button>
+            <center><div id="lastUpdated"></div><Br></center>
+            &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp<button id="refreshAtlas">Refresh</button> <button id="manualAdd">Quick Add</button> <button id="characterEdits">Edit Character(s)</button> <button id="atlasOptions">Options</button> <button id="learnMorePage">Learn More</button> <button id="nuke">Nuke</button>
+             <br>
              <br>
              <div id="atlasOptionsBar"><br>          
                 
@@ -37,15 +40,14 @@
              <br>
 
                     <br>
-             <div style="align-content: center; display: grid; grid-template-columns: 2fr 2fr 2fr 2fr 2fr 2fr 2fr ">
-                <div id="charaName"></div>
-                <div id="threadDescr"></div>
-                <div id="dateStarted"></div>
-                <div id="URL"></div>
-                <div id="turnCounter"></div>
-                <div id="commentsTotal"></div>
-                <div id="myComments"></div>
-                </div>         
+                    <div class="threadRow" style="justify-content: space-between; border-bottom: grey solid 1px;">
+                        <div class="popName" style="border: none;"><B>Character Name</B></div>
+                        <div class="popURL"><B>URL</B></div>
+                        <div class="popTurn"><B>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp   Turn</B></div>
+                        <div class="popTotalComments"><B>Total Comments</B></div>
+                        <div class="popDate"><B>Date Started</B></div>
+                    </div>
+                    <div class="threadHub"></div> 
              <br>
             <!-- Full screen button -->
             <button id="fullScreenVersion">Fullscreen View</button>

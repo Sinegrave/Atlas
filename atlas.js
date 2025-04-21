@@ -27,7 +27,7 @@ document.addEventListener("click", (e) => {
         function buttonToFunction(x){
             switch (x) {
                 case "refreshAtlas":
-                    console.log("brisket");
+                    update();
                     return;
                 case "manualAdd":
                    console.log("lunch");
@@ -43,6 +43,10 @@ document.addEventListener("click", (e) => {
                     return;
                 case "learnMorePage":
                     window.open("/learnmore.html", "_blank", "width=500,height=500,scrollbars=no");
+                case "nuke":
+                    console.log('nuke');
+                    nukeThreads();
+                    return;  
             }
         }
     }
@@ -72,7 +76,7 @@ document.addEventListener("click", (e) => {
                 return;
             case "myCommentsOptions":
                 toggle("myComments");
-                return;    
+                return;     
         }
     }
 }
@@ -82,8 +86,12 @@ document.addEventListener("click", (e) => {
 /**
  * Function to check for updates.
  */
-function refresh(){
-
+async function update (){
+    var updateText = document.getElementById("lastUpdated");
+    var d = new Date();
+    updateText.style.color = "#aaa";
+    await updateThreads();
+    updateText.innerHTML = "Last Updated: " + d; 
 }
 
 /**
@@ -123,7 +131,7 @@ function toggle(z){
  * Has ten parameters. 
  */
 
-function NewThread (name, threadTitle, url, turn, totalComments, myComments, date, description, altName, charColor) {
+function NewThread (name, threadTitle, url, turn, totalComments, myComments, date, commName, allPlayers, description, altName, charColor) {
     this.name = name;
     this.threadTitle = threadTitle;
     this.url = url;
@@ -131,6 +139,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     this.totalComments = totalComments
     this.myComments = myComments
     this.date = date
+    this.commName = commName;
+    this.allPlayers = allPlayers;
     this.description = description;
     this.altName = altName;
     this.charColor = charColor;
@@ -210,13 +220,115 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
     }
 
-    function createNewRow (x){
-        var cheese = document.getElementById("charaName");
-        const div = document.createElement('div');
-        div.append(x.name);
-        cheese.innerHTML ="hello";
-        cheese.innerHTML += div;
+
+    /**
+     * DEEP BREATH.
+     * 
+     *  One row div.
+     *  Ten divs for the ten elements.
+     *  Three are hidden.
+     *  Appends to place the data within the elements.
+     *  Div classes.
+     * 
+     * 
+     */
+
+    let threadHub = document.querySelector('.threadHub');
+    function addToPopUp(x){
+        var threadRow = document.createElement('div');
+
+        var nameButton = document.createElement('div');
+        var titleHidden = document.createElement('div');
+        var urlButton = document.createElement('div');
+        var turnButton = document.createElement('div');
+        var totalCommentsButton = document.createElement('div');
+        var myCommentsButton = document.createElement('div');
+        var dateButton = document.createElement('div');
+        var descriptionButton = document.createElement('div');
+        var altNameHidden = document.createElement('div');
+        var charColorHidden = document.createElement('div');
+        var linkOut = document.createElement('a');
+        
+
+        threadRow.setAttribute('class','threadRow');
+        nameButton.setAttribute('class','popName');
+        titleHidden.setAttribute('class','popTitle');
+        urlButton.setAttribute('class','popURL');
+        turnButton.setAttribute('class','popTurn');
+        totalCommentsButton.setAttribute('class','popTotal');
+        myCommentsButton.setAttribute('class','popMyComments');
+        dateButton.setAttribute('class','popDate');
+        descriptionButton.setAttribute('class','popDescription');
+        altNameHidden.setAttribute('class','popAlt');
+        charColorHidden.setAttribute('class','popColor');
+
+        nameButton.innerText = x.name;
+        if (x.charColor == "") {
+            nameButton.style.backgroundColor = '#f5f5f5';
+
+        }
+        else {
+            nameButton.style.backgroundColor = x.charColor;
+        }
+
+        if (x.turn == "Their turn.") {
+            turnButton.style.backgroundColor = '#f3decd';
+
+        }
+        else {
+            turnButton.style.backgroundColor = '#e1f0c9';
+        }
+        
+        titleHidden.innerText = x.threadTitle;
+        urlButton.innerText = x.description + " @ " + x.commName + " with " + x.allPlayers;
+        turnButton.innerText = x.turn;
+        totalCommentsButton.innerText = x.totalComments;
+        myCommentsButton.innerText = x.myComments;
+        dateButton.innerText = x.date;
+        descriptionButton.innerText = x.description;
+        altNameHidden.innerText = x.altName;
+        charColorHidden.innerText = x.charColor;
+
+        urlButton.appendChild(linkOut);
+
+        threadRow.appendChild(nameButton);
+        threadRow.appendChild(titleHidden);
+        threadRow.appendChild(urlButton);
+        threadRow.appendChild(turnButton);
+        threadRow.appendChild(totalCommentsButton);
+        threadRow.appendChild(myCommentsButton);
+        threadRow.appendChild(dateButton);
+        threadRow.appendChild(descriptionButton);
+        threadRow.appendChild(altNameHidden);
+        threadRow.appendChild(charColorHidden);
+
+        threadHub.appendChild(threadRow);
     }
+    /**
+     * 
+     * Check for changes in the current list of threads.
+     * 
+     */
+    async function updateThreads(){
+        var gettingAllThreads = browser.storage.local.get(null);
+        gettingAllThreads.then(async (results) => {
+            let threadsList = Object.keys(results);
+            console.log(threadsList);
+            /* For every item in the array, display. */
+            for (let individualThread of threadsList) {
+                let threadContents = results[individualThread];
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", threadContents.url, true);
+                xhttp.responseType = "document";
+                xhttp.onload = function(){
+                    var blockText = xhttp.response;
+                    console.log(getTotalComments(blockText));
+                    }
+                xhttp.send();
+                }
+            });
+        }
+
 
      /**
      * 
@@ -224,33 +336,20 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      * 
      */ 
 
+     getThreads();
      function getThreads (){
         var gettingAllThreads = browser.storage.local.get(null);
         gettingAllThreads.then((results) => {
             let threadsList = Object.keys(results);
+            console.log(threadsList);
             /* For every item in the array, display. */
             for (let individualThread of threadsList) {
                 let threadContents = results[individualThread];
-                var newDiv = document.createElement("div");
+                addToPopUp(threadContents);
+        }}
+    
+    )}
 
-                var lettuce = document.getElementById("dateStarted");
-                var cheese = document.getElementById("charaName");
-                var tomato = document.getElementById("threadDescr");
-                var onion = document.getElementById("URL");
-                var pepper = document.getElementById("turnCounter");
-                var pickles = document.getElementById("commentsTotal");
-                var oil = document.getElementById("myComments");
-
-                
-                cheese.innerHTML += '<div>' + threadContents.name+ '</div>';
-                lettuce.innerHTML += '<div>' + threadContents.date + '</div>';
-                onion.innerHTML += '<div>' + threadContents.url + '</div>';
-                pepper.innerHTML += '<div>' + threadContents.turn + '</div>';
-                pickles.innerHTML += '<div>' + threadContents.totalComments + '</div>';
-                tomato.innerHTML += '<div>' + threadContents.description + '</div>';
-                oil.innerHTML += '<div>' + threadContents.myComments + '</div>';
-
-        }})}
     /** 
      * 
      * Add a new thread to local storage.
@@ -259,6 +358,20 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     function storeThread(x, y) {
         let storeNewThread = browser.storage.local.set({ [x] : y });
         storeNewThread.then(() => {
+            getThreads();
+        });
+
+    }
+
+    /** 
+     * 
+     * Delete all threads. (Mostly for testing purposes.)
+     * 
+     */
+
+    function nukeThreads() {
+        let deleteAllThreads = browser.storage.local.clear();
+        deleteAllThreads.then(() => {
             getThreads();
         });
 
@@ -281,22 +394,23 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const topLevel = await goToFirstComment(this.id); // Document/XML version of the top-level
 
             const name = getJournalName(this.id);
-            /* CHANGE THIS TO BE THE TOP-MOST THREAD ID */ 
-            
-            const threadTitle = this.id; 
-            const url = getThreadLink(this.id);
+            const threadTitle = getThreadTitle(topLevel); 
+            const url = getTopLevelLink(topLevel); 
             const turn = determineTurn(topLevel);
             const totalComments = getTotalComments(topLevel);
             const myComments = getMyComments(topLevel, this.id);
             const date = getDate(topLevel);
+            const commName = getCommName(topLevel);
+            const allPlayers = getAllPlayers(topLevel, name);
             const description = "";
             const altName = "";
             const charColor = "";
         
-            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date, description, altName, charColor);
+            const a = new NewThread(name, threadTitle, url, turn, totalComments, myComments, date, commName, allPlayers, description, altName, charColor);
 
             /* Adds this thread to the array of threads. */
             threads.push(a); 
+            console.log(a);
 
             /* Stores the array in local storage. */
             storeThread(threadTitle, a);  
@@ -305,9 +419,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     }
 
     /* Obtain thread link. */
-    function getThreadLink(x){
-        const snail = document.getElementById("comment-" + x).getElementsByTagName("a");
-        return snail[3] + "";
+    function getThreadTitle(x){
+        var id = x.getElementsByClassName("dwexpcomment")[0].id;
+        return id;
     }
 
     /*  Find parent link, return a block of text from the top-most thread.  */
@@ -316,8 +430,18 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         return new Promise((resolve) => {
             createRequest(getParent(x, document));
                 function getParent(y, z){
-                var snail = z.getElementById("comment-" + y).getElementsByClassName("link commentparent");
-                var butterfly = snail[0].getElementsByTagName("a")[0];
+                    var snail = z.getElementById("comment-" + y).getElementsByClassName("link commentparent");
+
+                    if (snail[0] == undefined){
+                        console.log(z.getElementById("comment-" + y));
+                        console.log(z.getElementById("comment-" + y).getElementsByClassName("commentpermalink")[0]);
+                        
+                        
+                    }
+                    else if (snail[0] != undefined)  {
+                        var butterfly = snail[0].getElementsByTagName("a")[0];
+                    }
+                
                 return butterfly;
             }
             
@@ -342,6 +466,12 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     });
     }
 
+    function getTopLevelLink (x){
+        var site = x.getElementsByClassName("commentpermalink")[0].getElementsByTagName("a")[0];
+        var top = site.baseURI;
+        return top;
+    }
+
     /* Obtain total comments. */
     function getTotalComments(x){
         var boomer = x.getElementsByClassName("link commentparent");
@@ -361,11 +491,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         return jeans;
     }
 
-    /** 
-     * 
+    /**
      * Tell the user whose turn it is.
      * If the most recent comment matches that off the journal makine the query, not their turn.
-     *
      */
 
     function determineTurn(x){
@@ -380,7 +508,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
     }
      
-            
     /* Obtain journal name. */
     function getJournalName(x){
         const snail = document.getElementById("comment-" + x).getElementsByTagName("a");
@@ -390,6 +517,32 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     /* Obtain date started. */
     function getDate(x){
-        var boomer = x.getElementsByClassName("datetime")
-        return boomer[1].innerText;
+        var boomer = x.getElementsByClassName("datetime")[1];
+        var butt = boomer.innerText;
+        var teeth = butt.slice(0, 12);
+        return teeth;
     }
+
+    /* Obtain name name of the community where the thread is occuring. */
+    function getCommName(x){
+        var bread = x.getElementsByClassName("ljuser")[1].innerText;
+        console.log(bread);
+        return bread;
+    }
+
+    /*  Obtain the journal name of the other player(s).
+     * 
+     * Should return an array of at least two usernames.
+     */
+
+    function getAllPlayers(x, y){
+        var bread = x.getElementsByClassName("poster comment-poster");
+        var names = [];
+        let i = 0;
+        while (i < bread.length){
+            var noWhite = bread[i].innerText.trim();
+            if (names.indexOf(noWhite) == -1 && noWhite != y){
+                names += noWhite;
+            }
+        return names;
+    }}

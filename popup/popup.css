@@ -7,7 +7,7 @@ body {
     font-family: "Lato", sans-serif;
     padding: 20px;
     font-size: 13px;
-    width: 540px;
+    width: 640px;
 }
 
 h1 {
@@ -15,6 +15,66 @@ h1 {
     font-size: 50px;
     margin: auto;
 }
+
+.threadRow {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    align-content: space-between;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.popName {
+    flex: 1;
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.popTitle {
+    display: none;
+}
+
+.popURL {
+    overflow: hidden;
+    flex: 1;
+}
+
+.popTurn {
+    flex: 1;
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.popTotalComments {
+    flex: 1;
+}
+
+.popMyComments {
+    display: none;
+}
+
+.popDate {
+    flex: 1;
+}
+
+.popDescription {
+    display: none;
+}
+
+.popAlt {
+    display: none;
+}
+
+.popColor {
+    display: none;
+}
+
+
 
 button {
     border: solid 1px #aaa;

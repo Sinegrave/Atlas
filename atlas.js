@@ -18,11 +18,18 @@ const threads = [];
 
 
 /* HOLY SHIT. */
+
 document.addEventListener("click", (e) => {
-    
     if (e.target.tagName == "BUTTON") {
         const bee = e.target.id;
         buttonToFunction(bee);
+
+        var elements = document.getElementsByClassName("removeThread");
+            for (var i = 0; i < elements.length; i++) {
+                console.log ('Chicken Jockey');
+                console.log(this.id);
+                elements[i].onclick(nukeThis(this.threadTitle));
+            }
 
         function buttonToFunction(x){
             switch (x) {
@@ -43,10 +50,10 @@ document.addEventListener("click", (e) => {
                     return;
                 case "learnMorePage":
                     window.open("/learnmore.html", "_blank", "width=500,height=500,scrollbars=no");
+                    return;
                 case "nuke":
-                    console.log('nuke');
                     nukeThreads();
-                    return;  
+                    return; 
             }
         }
     }
@@ -156,7 +163,10 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
  * */
 
 /* Find a comment, any comment, and add a button that says 'add to tracker'. */
+    const comment = document.getElementsByClassName("comment");
     const bottomRow = document.getElementsByClassName("link reply first-item");
+    const threadLink = document.getElementsByClassName("link commentpermalink");
+
     const topLevel = document.getElementsByClassName("entry-readlink first-item");
     links();
     linksToo();
@@ -164,14 +174,17 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     function links(){
         let j = 0;
-        while (j < bottomRow.length){
-            const shoe = bottomRow[j];
-            if (shoe !== undefined && shoe !== null){
-                shoe.innerHTML += ")​    ​ ​    (";
-                shoe.appendChild(createNode(j));
+        while (j < comment.length){
+                const shoe = bottomRow[j];
+                if (shoe !== undefined && shoe !== null){
+                    shoe.innerHTML += ")​    ​ ​    (";
+                    if (threadLink[j] != undefined){ 
+                        var brisket = threadLink[j].getElementsByTagName("a")[0].href;
+                        var pickles = brisket.slice(-12);
+                        shoe.appendChild(createNode(pickles));
             }
-            j++;
         }
+            j = j + 1; }
     }
 
     function linksToo(){
@@ -188,13 +201,30 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     
     function createNode(x){
         const node = document.createElement("a");
-        const beer = document.getElementsByClassName("dwexpcomment")[x].id;
+        const loading = document.createElement("span");
+        const done = document.createElement("span");
         const classy = "atlasLink";
-        if (beer !== undefined && beer !== null){
-            node.setAttribute("id", beer);
+        if (x !== undefined && x !== null){
+            node.setAttribute("id", x);
             node.setAttribute("class", classy);
-            const textnode = document.createTextNode("Add to Tracker");
-            node.appendChild(textnode);    
+
+            const textnode = document.createTextNode("Add to Tracker");    
+
+            loading.setAttribute("class", "loadingClass");
+            loading.style.display = "none";
+            done.setAttribute("class", "doneClass");
+            done.style.display = "none";
+
+            const loadingInnerText = document.createTextNode('Loading...');
+            const doneInnerText = document.createTextNode('All done!');
+
+            loading.appendChild(loadingInnerText);
+            done.appendChild(doneInnerText);
+
+
+            node.appendChild(textnode);
+            node.appendChild(loading);
+            node.appendChild(done);
             return node; 
         }
 
@@ -205,10 +235,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     function createBigNode(x){
         const node = document.createElement("a");
-        const beer = document.getElementsByClassName("entry")[0].id;
         const classy = "topLink";
-        if (beer !== undefined && beer !== null){
-            node.setAttribute("id", beer);
+        if (x !== undefined && x !== null){
+            node.setAttribute("id", x);
             node.setAttribute("class", classy);
             const textnode = document.createTextNode("Add to Tracker");
             node.appendChild(textnode);    
@@ -234,6 +263,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      */
 
     let threadHub = document.querySelector('.threadHub');
+    
     function addToPopUp(x){
         var threadRow = document.createElement('div');
 
@@ -244,13 +274,17 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         var totalCommentsButton = document.createElement('div');
         var myCommentsButton = document.createElement('div');
         var dateButton = document.createElement('div');
-        var descriptionButton = document.createElement('div');
+        var descriptionButton = document.createElement('span');
         var altNameHidden = document.createElement('div');
         var charColorHidden = document.createElement('div');
         var linkOut = document.createElement('a');
+
+        var removeThread = document.createElement('div');
+        var removeButton = document.createElement('button');
         
 
         threadRow.setAttribute('class','threadRow');
+        threadRow.setAttribute('id', x.threadTitle);
         nameButton.setAttribute('class','popName');
         titleHidden.setAttribute('class','popTitle');
         urlButton.setAttribute('class','popURL');
@@ -260,7 +294,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         dateButton.setAttribute('class','popDate');
         descriptionButton.setAttribute('class','popDescription');
         altNameHidden.setAttribute('class','popAlt');
-        charColorHidden.setAttribute('class','popColor');
+        removeButton.setAttribute('class','removeThread');
+        removeButton.setAttribute('id', x.threadTitle);
+        removeThread.setAttribute('id', x.threadTitle);
+
+        
 
         nameButton.innerText = x.name;
         if (x.charColor == "") {
@@ -278,18 +316,30 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         else {
             turnButton.style.backgroundColor = '#e1f0c9';
         }
-        
+
+        if (x.description == "") {
+            descriptionButton.innerText = "Some details here";
+
+        }
+        else {
+            descriptionButton.innerText  = x.description;
+        }
+
         titleHidden.innerText = x.threadTitle;
-        urlButton.innerText = x.description + " @ " + x.commName + " with " + x.allPlayers;
+        urlButton.innerText = descriptionButton.innerText + " @ " + x.commName + " with " + x.allPlayers;
         turnButton.innerText = x.turn;
         totalCommentsButton.innerText = x.totalComments;
         myCommentsButton.innerText = x.myComments;
         dateButton.innerText = x.date;
-        descriptionButton.innerText = x.description;
+           
         altNameHidden.innerText = x.altName;
         charColorHidden.innerText = x.charColor;
+        removeButton.innerText = '🗑️';
 
         urlButton.appendChild(linkOut);
+
+        removeThread.appendChild(removeButton);
+        
 
         threadRow.appendChild(nameButton);
         threadRow.appendChild(titleHidden);
@@ -298,9 +348,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         threadRow.appendChild(totalCommentsButton);
         threadRow.appendChild(myCommentsButton);
         threadRow.appendChild(dateButton);
-        threadRow.appendChild(descriptionButton);
         threadRow.appendChild(altNameHidden);
         threadRow.appendChild(charColorHidden);
+        threadRow.appendChild(removeThread);
 
         threadHub.appendChild(threadRow);
     }
@@ -374,7 +424,28 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         deleteAllThreads.then(() => {
             getThreads();
         });
+    }
 
+    /** 
+     * 
+     * Delete this thread.
+     * 
+     */
+
+    function nukeThis(x) {
+        let deleteThread = browser.storage.local.remove(x);
+        console.log('The nuke has been deployed,')
+        console.log(this.threadTitle)
+        deleteThread.then(() => {
+            getThreads();
+        });
+
+    }
+
+    function addLoader(x){
+        var neef = document.getElementById("comment-" + x).getElementsByClassName('atlasLink');
+        var burn = neef.getElementsByClassName("loadingClass")[0];
+        console.log(burn);
     }
 
     /** 
@@ -390,7 +461,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     function addThread() {
         const boxes = document.querySelectorAll('.atlasLink');
         boxes.forEach(atlasLink => {
-        atlasLink.addEventListener('click', async function handleClick(event) {
+            atlasLink.addEventListener('click', async function handleClick(event) {
+            addLoader(this.id);
             const topLevel = await goToFirstComment(this.id); // Document/XML version of the top-level
 
             const name = getJournalName(this.id);
@@ -418,36 +490,39 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     });
     }
 
-    /* Obtain thread link. */
-    function getThreadTitle(x){
-        var id = x.getElementsByClassName("dwexpcomment")[0].id;
-        return id;
-    }
-
-    /*  Find parent link, return a block of text from the top-most thread.  */
-    async function goToFirstComment(x){
+      /*  Find parent link, return a block of text from the top-most thread.  */
+      async function goToFirstComment(x){
         var link;
+        var butterfly = [];
+        console.log(x);
         return new Promise((resolve) => {
             createRequest(getParent(x, document));
-                function getParent(y, z){
-                    var snail = z.getElementById("comment-" + y).getElementsByClassName("link commentparent");
+                function getParent(x, z){
+                    var snail = z.getElementById("comment-" + x).getElementsByClassName("link commentparent");
+                    console.log(snail);
 
                     if (snail[0] == undefined){
-                        console.log(z.getElementById("comment-" + y));
-                        console.log(z.getElementById("comment-" + y).getElementsByClassName("commentpermalink")[0]);
-                        
-                        
+                       var grub = z.getElementById("comment-" + x).getElementsByClassName("commentpermalink")[0];
+
+
+                       console.log(z.getElementById("comment-" + x));
+                       console.log(z.getElementById("comment-" + x).getElementsByClassName("commentpermalink")[0]);
+                       var beast =  grub.getElementsByTagName("a")[0];
+                       butterfly[0] = beast.href;
+                       butterfly[1] = x;
+                       console.log(butterfly);
                     }
                     else if (snail[0] != undefined)  {
-                        var butterfly = snail[0].getElementsByTagName("a")[0];
+                        butterfly[0] = snail[0].getElementsByTagName("a")[0];
+                        
                     }
-                
                 return butterfly;
             }
+
             
             function createRequest(x){
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("GET", x, true);
+                xhttp.open("GET", x[0], true);
                 xhttp.responseType = "document";
                 xhttp.onload = function(){
                     var blockText = xhttp.response;
@@ -455,6 +530,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
                        var breech = blockText.getElementById("comment-" + id).getElementsByClassName("link commentparent");
                        if ( breech[0] == undefined){
                           link = blockText;
+                          console.log(link);
                           resolve(link);
                        }
                        else {
@@ -466,6 +542,13 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     });
     }
 
+
+    /* Obtain thread link. */
+    function getThreadTitle(x){
+        var id = x.getElementsByClassName("dwexpcomment")[0].id;
+        return id;
+    }
+
     function getTopLevelLink (x){
         var site = x.getElementsByClassName("commentpermalink")[0].getElementsByTagName("a")[0];
         var top = site.baseURI;
@@ -474,7 +557,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     /* Obtain total comments. */
     function getTotalComments(x){
-        var boomer = x.getElementsByClassName("link commentparent");
+        var boomer = x.getElementsByClassName("comment");
         return boomer.length;
     }
 
@@ -542,7 +625,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         while (i < bread.length){
             var noWhite = bread[i].innerText.trim();
             if (names.indexOf(noWhite) == -1 && noWhite != y){
-                names += noWhite;
+                names += noWhite + ", ";
             }
-        return names;
-    }}
+            
+            i++}
+        var butt = names.slice(0, names.length-2);
+        console.log(butt);
+        return butt;
+    }

@@ -2,18 +2,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Modak&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Redacted+Script:wght@300;400;700&display=swap');
 
+#popup-content::-webkit-scrollbar {
+    display: none;
+  }
 
 body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
     font-family: "Lato", sans-serif;
     padding: 20px;
+    place-items: center;
     font-size: 13px;
+    margin: auto;
     width: 640px;
+    border: 20px solid transparent;
+    border-image: repeating-radial-gradient(
+        circle at 10px,
+        #40e0d0,
+        #ffc0cb 2px,
+        #adff2f 4px,
+        pink 2px
+    )
+    1;
 }
 
 h1 {
     font-family: "Redacted Script", serif;
-    font-size: 50px;
+    font-size: 44px;
     margin: auto;
+    background: linear-gradient(229deg, #adff2f 0%, #40e0d0 22%, #ffc0cb 65%);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
 }
 
 .threadRow {
@@ -27,9 +49,18 @@ h1 {
     margin-bottom: 10px;
 }
 
+#popup-content {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    width: 100%;
+}
+
+#characterHub {
+    display: none;
+}
 
 .popName {
-    flex: 1;
+    flex: 2;
     padding: 5px;
     border-radius: 5px;
     width: fit-content;
@@ -39,9 +70,13 @@ h1 {
     display: none;
 }
 
+.popdelete {
+    flex: 1;
+}
+
 .popURL {
     overflow: hidden;
-    flex: 1;
+    flex: 2;
 }
 
 .popTurn {
@@ -89,7 +124,7 @@ button {
 }
 
 button:hover {
-    background-color: #e5e5e5;
+    background-color: #A1D2CC;
 }
 
 #atlasOptionsBar {
@@ -109,7 +144,7 @@ button:hover {
     padding: 1%;
     width: fit-content;
     border-radius: 3px;
-    background-color: paleturquoise;
+    background-color: #afeeee;
 }
 
 .turnCounterYou {
@@ -123,23 +158,3 @@ button:hover {
     border-radius: 3px;
     padding: 1%;
 }
-
-.loader {
-    width: 48px;
-    height: 48px;
-    border: 5px solid #FFF;
-    border-bottom-color: #FF3D00;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-    }
-
-    @keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-    } 

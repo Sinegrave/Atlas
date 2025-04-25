@@ -18,42 +18,47 @@ const threads = [];
 
 
 /* HOLY SHIT. */
+try {
+    update();
+    characterEdits();
+} catch (error) {}
 
 document.addEventListener("click", (e) => {
     if (e.target.tagName == "BUTTON") {
         const bee = e.target.id;
         buttonToFunction(bee);
 
+        if (e.target.className == "removeThread") {
         var elements = document.getElementsByClassName("removeThread");
             for (var i = 0; i < elements.length; i++) {
-                console.log ('Chicken Jockey');
-                console.log(this.id);
-                elements[i].onclick(nukeThis(this.threadTitle));
-            }
+                console.log(bee);
+                nukeThis(bee); }}
 
-        function buttonToFunction(x){
+        async function buttonToFunction(x){          
+
             switch (x) {
                 case "refreshAtlas":
-                    update();
+                    location.reload();
+                    const myTimeout = setTimeout(goUpdate, 2000);
+                    function goUpdate() {
+                        update();
+                    }
                     return;
-                case "manualAdd":
-                   console.log("lunch");
-                   return;
                 case "characterEdits":
-                    console.log("cereal");
-                    return;
-                case "atlasOptions":
-                    toggle("atlasOptionsBar");
+                    toggle("characterHub");
                     return;
                 case "fullScreenVersion":
                     window.open("/fullscreen.html", "_blank", "width=800,height=800,scrollbars=no");
                     return;
                 case "learnMorePage":
-                    window.open("/learnmore.html", "_blank", "width=500,height=500,scrollbars=no");
+                    window.open("/learnmore.html", "_blank", "width=800,height=250,scrollbars=no");
                     return;
                 case "nuke":
                     nukeThreads();
+                    location.reload();
                     return; 
+                case "removeThread":
+                return;
             }
         }
     }
@@ -93,25 +98,49 @@ document.addEventListener("click", (e) => {
 /**
  * Function to check for updates.
  */
-async function update (){
+function update(){
     var updateText = document.getElementById("lastUpdated");
     var d = new Date();
+    var short = d.toLocaleString('en-US');
     updateText.style.color = "#aaa";
-    await updateThreads();
-    updateText.innerHTML = "Last Updated: " + d; 
-}
-
-/**
- * Function to add a new thread via a link.
- */
-function quickAdd(){
-
+    updateText.innerHTML = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Last Updated: " + short;
+        
 }
 
 /**
  * Function to edit character name/color.
  */
-function edit(){
+function characterEdits(){
+    var gettingAllThreads = browser.storage.local.get(null);
+        gettingAllThreads.then((results) => {
+            let threadsList = Object.keys(results);
+            console.log(threadsList);
+            let bark = document.getElementById("characterHub");
+            /* For every item in the array, display. */
+            for (let individualThread of threadsList) {
+                var newLine = document.createElement('br');
+                var colorButton = document.createElement('button');
+                var nameButton = document.createElement('button');
+                var removeButton = document.createElement('button');
+                var characterName = document.createElement('span');
+                var characterRow = document.createElement('span');
+    
+    colorButton.innerHTML = 'Change Color';
+    nameButton.innerHTML = 'Change Name';
+    removeButton.innerHTML = 'Remove';
+
+    characterRow.appendChild(newLine);
+    characterRow.appendChild(characterName);
+    characterRow.appendChild(newLine);
+    characterRow.appendChild(nameButton);
+    characterRow.appendChild(colorButton);
+    characterRow.appendChild(removeButton);
+    characterRow.appendChild(newLine);
+
+                let threadContents = results[individualThread];
+                characterName.innerHTML = threadContents.name + " ";
+                bark.appendChild(characterRow);
+        }})
 
 }
 
@@ -166,7 +195,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     const comment = document.getElementsByClassName("comment");
     const bottomRow = document.getElementsByClassName("link reply first-item");
     const threadLink = document.getElementsByClassName("link commentpermalink");
-
+    const entryTitle = document.getElementsByClassName("entry-title");
     const topLevel = document.getElementsByClassName("entry-readlink first-item");
     links();
     linksToo();
@@ -201,6 +230,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     
     function createNode(x){
         const node = document.createElement("a");
+        const text = document.createElement("span");
         const loading = document.createElement("span");
         const done = document.createElement("span");
         const classy = "atlasLink";
@@ -208,21 +238,30 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             node.setAttribute("id", x);
             node.setAttribute("class", classy);
 
-            const textnode = document.createTextNode("Add to Tracker");    
-
-            loading.setAttribute("class", "loadingClass");
+            text.innerText = "Add to Tracker";
+            text.setAttribute("class", "text");    
+            loading.setAttribute("class", "loader");
             loading.style.display = "none";
-            done.setAttribute("class", "doneClass");
+
+            /*  Let's build a circle. */
+            loading.style.width = "20px";
+            loading.style.height = "20px";
+            loading.style.borderWidth = "5px";
+            loading.style.borderColor = "#FFF";
+            loading.style.borderStyle = "solid";
+            loading.style.borderBottomColor = "#afeeee";
+            loading.style.borderRadius = "50%";
+            loading.style.display = "none";
+            loading.style.boxSizing = "border-box";
+            loading.style.animation = "rotation 1s linear infinite";
+
+
+            done.setAttribute("class", "done");
+            done.innerHTML = "✔️";
             done.style.display = "none";
 
-            const loadingInnerText = document.createTextNode('Loading...');
-            const doneInnerText = document.createTextNode('All done!');
 
-            loading.appendChild(loadingInnerText);
-            done.appendChild(doneInnerText);
-
-
-            node.appendChild(textnode);
+            node.appendChild(text);
             node.appendChild(loading);
             node.appendChild(done);
             return node; 
@@ -235,12 +274,43 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     function createBigNode(x){
         const node = document.createElement("a");
+        const text = document.createElement("span");
+        const loading = document.createElement("span");
+        const done = document.createElement("span");
         const classy = "topLink";
+        var butter = entryTitle[0].getElementsByTagName("a");
+        var nut = butter[0].href;
+        console.log(nut);
         if (x !== undefined && x !== null){
-            node.setAttribute("id", x);
+            node.setAttribute("id", nut);
             node.setAttribute("class", classy);
-            const textnode = document.createTextNode("Add to Tracker");
-            node.appendChild(textnode);    
+
+            text.innerText = "Add to Tracker";
+            text.setAttribute("class", "text");    
+            loading.setAttribute("class", "loader");
+            loading.style.display = "none";
+
+            /*  Let's build a circle. */
+            loading.style.width = "20px";
+            loading.style.height = "20px";
+            loading.style.borderWidth = "5px";
+            loading.style.borderColor = "#FFF";
+            loading.style.borderStyle = "solid";
+            loading.style.borderBottomColor = "#afeeee";
+            loading.style.borderRadius = "50%";
+            loading.style.display = "none";
+            loading.style.boxSizing = "border-box";
+            loading.style.animation = "rotation 1s linear infinite";
+
+
+            done.setAttribute("class", "done");
+            done.innerHTML = "✔️";
+            done.style.display = "none";
+
+
+            node.appendChild(text);
+            node.appendChild(loading);
+            node.appendChild(done);
             return node; 
         }
 
@@ -294,9 +364,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         dateButton.setAttribute('class','popDate');
         descriptionButton.setAttribute('class','popDescription');
         altNameHidden.setAttribute('class','popAlt');
-        removeButton.setAttribute('class','removeThread');
-        removeButton.setAttribute('id', x.threadTitle);
+
+        removeThread.setAttribute('class','removeThread');
         removeThread.setAttribute('id', x.threadTitle);
+        removeButton.setAttribute('id', x.threadTitle);
+        removeButton.setAttribute('class','removeThread')
 
         
 
@@ -310,11 +382,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
 
         if (x.turn == "Their turn.") {
-            turnButton.style.backgroundColor = '#f3decd';
+            turnButton.style.backgroundColor = '#ffd9df';
 
         }
         else {
-            turnButton.style.backgroundColor = '#e1f0c9';
+            turnButton.style.backgroundColor = '#CDFF82';
         }
 
         if (x.description == "") {
@@ -335,6 +407,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         altNameHidden.innerText = x.altName;
         charColorHidden.innerText = x.charColor;
         removeButton.innerText = '🗑️';
+        removeButton.style.border = 'none';
 
         urlButton.appendChild(linkOut);
 
@@ -433,20 +506,44 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      */
 
     function nukeThis(x) {
+        console.log('The nuke has been deployed,');
+        console.log(x);
         let deleteThread = browser.storage.local.remove(x);
-        console.log('The nuke has been deployed,')
-        console.log(this.threadTitle)
         deleteThread.then(() => {
             getThreads();
+            location.reload();
         });
 
     }
 
     function addLoader(x){
-        var neef = document.getElementById("comment-" + x).getElementsByClassName('atlasLink');
-        var burn = neef.getElementsByClassName("loadingClass")[0];
-        console.log(burn);
+       var color = document.getElementById(x);
+       var sound = color.getElementsByClassName("atlasLink")[0];
+       var movie = sound.getElementsByClassName("loader")[0];
+       var film = sound.getElementsByClassName("text")[0];
+       movie.style.display = "inline-block";
+       film.style.display = "none";
+
+       movie.animate([
+        // key frames
+        { transform: 'rotate(0deg)' },
+        { transform: 'rotate(360deg)' }
+      ], {
+        // sync options
+        duration: 1000,
+        iterations: Infinity
+      });
     }
+
+    function removeLoader(x){
+        var color = document.getElementById(x);
+        var sound = color.getElementsByClassName("atlasLink")[0];
+        var movie = sound.getElementsByClassName("loader")[0];
+        var film = sound.getElementsByClassName("done")[0];
+        movie.style.display = "none";
+        film.style.display = "inline-block";
+     }
+ 
 
     /** 
      * 
@@ -460,6 +557,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     
     function addThread() {
         const boxes = document.querySelectorAll('.atlasLink');
+
         boxes.forEach(atlasLink => {
             atlasLink.addEventListener('click', async function handleClick(event) {
             addLoader(this.id);
@@ -470,7 +568,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const url = getTopLevelLink(topLevel); 
             const turn = determineTurn(topLevel);
             const totalComments = getTotalComments(topLevel);
-            const myComments = getMyComments(topLevel, this.id);
+            const myComments = getMyComments(topLevel, name);
             const date = getDate(topLevel);
             const commName = getCommName(topLevel);
             const allPlayers = getAllPlayers(topLevel, name);
@@ -486,6 +584,13 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
             /* Stores the array in local storage. */
             storeThread(threadTitle, a);  
+
+            /* Refreshes the popbox. */
+            try {
+                update();
+            } catch (error) {}
+
+            removeLoader(this.id);
         });
     });
     }
@@ -565,9 +670,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     function getMyComments(x, y){
         var boomer = x.getElementsByClassName("ljuser");
         var jeans = -1;
-        var myJournal = getJournalName(y);
         for (var i = 0; i < boomer.length; i++){
-            if (boomer[i].innerText == myJournal){
+            if (boomer[i].innerText == y){
                 jeans = jeans + 1;
             }
         }

@@ -111,37 +111,30 @@ function update(){
  * Function to edit character name/color.
  */
 function characterEdits(){
+    let bark = document.getElementById("characterHub");
+    let journalList = [];
     var gettingAllThreads = browser.storage.local.get(null);
         gettingAllThreads.then((results) => {
             let threadsList = Object.keys(results);
-            console.log(threadsList);
-            let bark = document.getElementById("characterHub");
-            /* For every item in the array, display. */
-            for (let individualThread of threadsList) {s
-                var newLine = document.createElement('br');
-                var colorButton = document.createElement('button');
-                var nameButton = document.createElement('button');
-                var removeButton = document.createElement('button');
-                var characterName = document.createElement('span');
-                var characterRow = document.createElement('span');
+            if (threadsList != ""){
+                for (i = 0; threadsList.length > i; i++) {
+                    let threadContents = results[threadsList[i]];
+                    console.log(threadContents.name);
+
+                    if (journalList.length = 0){
+                        journalList[i] = threadContents.name + " BUTT";
+                    }
+
+                    else {
+                        
+                    }
                 
-                colorButton.innerHTML = 'Change Color';
-                nameButton.innerHTML = 'Change Name';
-                removeButton.innerHTML = 'Remove';
+            }
+        }
 
-                characterRow.appendChild(newLine);
-                characterRow.appendChild(characterName);
-                characterRow.appendChild(newLine);
-                characterRow.appendChild(nameButton);
-                characterRow.appendChild(colorButton);
-                characterRow.appendChild(removeButton);
-                characterRow.appendChild(newLine);
-
-                let threadContents = results[individualThread];
-                characterName.innerHTML = threadContents.name + " ";
-                bark.appendChild(characterRow);
-        }})
-
+        console.log(journalList);
+    }
+    );
 }
 
 
@@ -295,7 +288,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             loading.style.width = "20px";
             loading.style.height = "20px";
             loading.style.borderWidth = "5px";
-            loading.style.borderColor = "#000000";
+            loading.style.borderColor = "#000";
             loading.style.borderStyle = "solid";
             loading.style.borderBottomColor = "#f34b67";
             loading.style.borderRadius = "50%";
@@ -406,12 +399,13 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         myCommentsButton.innerText = x.myComments;
         dateButton.innerText = x.date;
 
-        linkOut.innerText = x.commName;
+        linkOut.innerText = x.commName + " ";
         linkOut.href = x.url;
 
         linkOut.style.textDecoration = "none";
         linkOut.style.fontStyle = "italic";
         linkOut.style.padding = "2px";
+        linkOut.style.color = "black";
         linkOut.style.backgroundColor ="rgb(241, 255, 137)";
         linkOut.style.borderRadius = "2px";
 

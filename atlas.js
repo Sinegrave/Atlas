@@ -96,7 +96,9 @@ document.addEventListener("click", (e) => {
 });
 
 /**
- * Function to check for updates.
+ * 
+ * Function to check for updates, need some ingenity...
+ * 
  */
 function update(){
     var updateText = document.getElementById("lastUpdated");
@@ -108,7 +110,9 @@ function update(){
 }
 
 /**
- * Function to edit character name/color.
+ * 
+ * Function to open character name/color panel.
+ * 
  */
 function characterEdits(){
     let bark = document.getElementById("characterHub");
@@ -119,27 +123,45 @@ function characterEdits(){
             if (threadsList != ""){
                 for (i = 0; threadsList.length > i; i++) {
                     let threadContents = results[threadsList[i]];
-                    console.log(threadContents.name);
-
-                    if (journalList.length = 0){
-                        journalList[i] = threadContents.name + " BUTT";
-                    }
-
-                    else {
-                        
-                    }
-                
+                    journalList[i] = threadContents.name;
             }
         }
 
-        console.log(journalList);
+        let s = new Set(journalList);
+        let a1 = [...s]
+        console.log(a1);
+
+        for (i = 0; a1.length > i; i++) {
+            console.log("do u love me yes no maybe");
+    }
     }
     );
 }
 
 
 /**
+ * 
+ * Take and store user input.
+ * 
+ */
+
+function getDescription(x){
+
+}
+
+function getColor(x){
+
+}
+
+function getNewUser(x){
+
+}
+
+
+/**
+ * 
  * Function to open the options panel.
+ * 
  */
 function toggle(z){
     var x = document.getElementById(z);
@@ -725,9 +747,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         return bread;
     }
 
-    /*  Obtain the journal name of the other player(s).
-     * 
-     * Should return an array of at least two usernames.
+    /*  
+     *  Obtain the journal name of the other player(s).
+     *  Should return an array of at least two usernames.
      */
 
     function getAllPlayers(x, y){

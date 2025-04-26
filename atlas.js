@@ -51,7 +51,7 @@ document.addEventListener("click", (e) => {
                     window.open("/fullscreen.html", "_blank", "width=800,height=800,scrollbars=no");
                     return;
                 case "learnMorePage":
-                    window.open("/learnmore.html", "_blank", "width=800,height=250,scrollbars=no");
+                    window.open("/learnmore.html", "_blank", "width=800,height=550,scrollbars=no");
                     return;
                 case "nuke":
                     nukeThreads();
@@ -103,7 +103,7 @@ function update(){
     var d = new Date();
     var short = d.toLocaleString('en-US');
     updateText.style.color = "#aaa";
-    updateText.innerHTML = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Last Updated: " + short;
+    updateText.innerHTML = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Last Updated: " + short;
         
 }
 
@@ -117,25 +117,25 @@ function characterEdits(){
             console.log(threadsList);
             let bark = document.getElementById("characterHub");
             /* For every item in the array, display. */
-            for (let individualThread of threadsList) {
+            for (let individualThread of threadsList) {s
                 var newLine = document.createElement('br');
                 var colorButton = document.createElement('button');
                 var nameButton = document.createElement('button');
                 var removeButton = document.createElement('button');
                 var characterName = document.createElement('span');
                 var characterRow = document.createElement('span');
-    
-    colorButton.innerHTML = 'Change Color';
-    nameButton.innerHTML = 'Change Name';
-    removeButton.innerHTML = 'Remove';
+                
+                colorButton.innerHTML = 'Change Color';
+                nameButton.innerHTML = 'Change Name';
+                removeButton.innerHTML = 'Remove';
 
-    characterRow.appendChild(newLine);
-    characterRow.appendChild(characterName);
-    characterRow.appendChild(newLine);
-    characterRow.appendChild(nameButton);
-    characterRow.appendChild(colorButton);
-    characterRow.appendChild(removeButton);
-    characterRow.appendChild(newLine);
+                characterRow.appendChild(newLine);
+                characterRow.appendChild(characterName);
+                characterRow.appendChild(newLine);
+                characterRow.appendChild(nameButton);
+                characterRow.appendChild(colorButton);
+                characterRow.appendChild(removeButton);
+                characterRow.appendChild(newLine);
 
                 let threadContents = results[individualThread];
                 characterName.innerHTML = threadContents.name + " ";
@@ -209,7 +209,8 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
                     shoe.innerHTML += ")​    ​ ​    (";
                     if (threadLink[j] != undefined){ 
                         var brisket = threadLink[j].getElementsByTagName("a")[0].href;
-                        var pickles = brisket.slice(-12);
+                        let index = brisket.lastIndexOf("c");
+                        var pickles = brisket.slice(index - brisket.length);
                         shoe.appendChild(createNode(pickles));
             }
         }
@@ -294,9 +295,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             loading.style.width = "20px";
             loading.style.height = "20px";
             loading.style.borderWidth = "5px";
-            loading.style.borderColor = "#FFF";
+            loading.style.borderColor = "#000000";
             loading.style.borderStyle = "solid";
-            loading.style.borderBottomColor = "#afeeee";
+            loading.style.borderBottomColor = "#f34b67";
             loading.style.borderRadius = "50%";
             loading.style.display = "none";
             loading.style.boxSizing = "border-box";
@@ -348,6 +349,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         var altNameHidden = document.createElement('div');
         var charColorHidden = document.createElement('div');
         var linkOut = document.createElement('a');
+        var playerNames = document.createElement('span');
 
         var removeThread = document.createElement('div');
         var removeButton = document.createElement('button');
@@ -398,11 +400,22 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
 
         titleHidden.innerText = x.threadTitle;
-        urlButton.innerText = descriptionButton.innerText + " @ " + x.commName + " with " + x.allPlayers;
+        urlButton.innerText = descriptionButton.innerText + " @ ";
         turnButton.innerText = x.turn;
         totalCommentsButton.innerText = x.totalComments;
         myCommentsButton.innerText = x.myComments;
         dateButton.innerText = x.date;
+
+        linkOut.innerText = x.commName;
+        linkOut.href = x.url;
+
+        linkOut.style.textDecoration = "none";
+        linkOut.style.fontStyle = "italic";
+        linkOut.style.padding = "2px";
+        linkOut.style.backgroundColor ="rgb(241, 255, 137)";
+        linkOut.style.borderRadius = "2px";
+
+        playerNames.innerText = " with " + x.allPlayers;
            
         altNameHidden.innerText = x.altName;
         charColorHidden.innerText = x.charColor;
@@ -410,6 +423,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         removeButton.style.border = 'none';
 
         urlButton.appendChild(linkOut);
+        urlButton.appendChild(playerNames);
 
         removeThread.appendChild(removeButton);
         
@@ -566,7 +580,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             const name = getJournalName(this.id);
             const threadTitle = getThreadTitle(topLevel); 
             const url = getTopLevelLink(topLevel); 
-            const turn = determineTurn(topLevel);
+            const turn = determineTurn(topLevel, name);
             const totalComments = getTotalComments(topLevel);
             const myComments = getMyComments(topLevel, name);
             const date = getDate(topLevel);
@@ -683,9 +697,9 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      * If the most recent comment matches that off the journal makine the query, not their turn.
      */
 
-    function determineTurn(x){
+    function determineTurn(x, y){
         var boomer = x.getElementsByClassName("ljuser");
-        var myJournal = boomer[boomer.length-1].innerText;
+        var myJournal = y;
         var otherJournal = boomer[boomer.length-2].innerText;
         if (otherJournal == myJournal){
             return "Their turn."

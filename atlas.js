@@ -35,6 +35,14 @@ document.addEventListener("click", (e) => {
                 console.log(bee);
                 nukeThis(bee); }}
 
+            if (e.target.className == "popURL") {
+                var elements = document.getElementsByClassName("popDescription");
+                    for (var i = 0; i < elements.length; i++) {
+                        console.log(bee);
+                        getDescription(bee)
+                     }
+                    }
+
         async function buttonToFunction(x){          
 
             switch (x) {
@@ -189,7 +197,7 @@ function characterEdits(){
  */
 
 function getDescription(x){
-
+    console.log('Out damn spot');
 }
 
 function getColor(x){

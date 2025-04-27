@@ -27,11 +27,6 @@ body {
     1;
 }
 
-.journalTitle {
-    
-
-}
-
 h1 {
     font-family: "Redacted Script", serif;
     font-size: 44px;
@@ -45,19 +40,34 @@ h1 {
 }
 
 .threadRow {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: center;
-    width: 100%;
+    display: grid;
+    grid-template-columns: 100px 160px 80px 80px 80px 80px 80px;
+    grid-template-rows: fit-content;
     align-content: space-between;
-    overflow: hidden;
-    margin-bottom: 10px;
+    align-items: center;
+    justify-items: start;
+    place-items: center;
+    padding-bottom: 10px;
+    grid-auto-flow: row;
 }
+
 .fullTopGrid {
     display: grid;
     align-content: space-between;
     align-items: center;
+    justify-items: center;
+    place-items: center;
+    grid-template-rows: repeat(1, 1fr);
+    width: 100%;
+    grid-template-rows: fit-content;
+}
+
+.fullTopGrid button {
+    border: solid 1px #aaa;
+    padding: 1%;
+    border-radius: 5px;
+    font-size: 12px;
+    background-color: #fff;
 }
 
 .fullRow {
@@ -120,14 +130,6 @@ h1 {
     flex: 1;
 }
 
-.popAlt {
-    display: none;
-}
-
-.popColor {
-    display: none;
-}
-
 .loadingClass{
     display: none;
 } 
@@ -153,30 +155,7 @@ button:hover {
     display: none;
 }
 
-.contentHolder {
-    
-}
-
 .newThread div {
     width: 20%;
     overflow: hidden;
-}
-
-.characterName {
-    padding: 1%;
-    width: fit-content;
-    border-radius: 3px;
-    background-color: #afeeee;
-}
-
-.turnCounterYou {
-    background-color: rgb(238, 228, 175);
-    border-radius: 3px;
-    padding: 1%;
-}
-
-.turnCounterThem {
-    background-color: rgb(175, 238, 203);
-    border-radius: 3px;
-    padding: 1%;
 }

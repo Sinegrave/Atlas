@@ -24,7 +24,7 @@ try {
     characterEdits();
 } catch (error) {}
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
     if (e.target.tagName == "BUTTON") {
         const bee = e.target.id;
         buttonToFunction(bee);
@@ -33,15 +33,18 @@ document.addEventListener("click", (e) => {
         var elements = document.getElementsByClassName("removeThread");
             for (var i = 0; i < elements.length; i++) {
                 console.log(bee);
-                nukeThis(bee); }}
+                nukeThis(bee); 
+            }
+            }
 
-            if (e.target.className == "popURL") {
-                var elements = document.getElementsByClassName("popDescription");
-                    for (var i = 0; i < elements.length; i++) {
-                        console.log(bee);
-                        getDescription(bee)
-                     }
-                    }
+        else if (e.target.className == "popURL") {
+            var elements = document.getElementsByClassName("popURL");
+            for (var i = 0; i < elements.length; i++) {
+                    console.log(bee);
+                    await getDescription(bee);
+                    
+            }              
+        }
 
         async function buttonToFunction(x){          
 
@@ -58,7 +61,7 @@ document.addEventListener("click", (e) => {
                     return;
                 case "fullScreenVersion":
                     console.log(fullThreadHub);
-                    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body><div class="fullTopGrid"><h1> &nbsp &nbsp DW Thread Tracker</h1><div id="lastUpdated"></div><Br><button id="refreshAtlas">Refresh</button> <button id="characterEdits">Edit Character(s)</button> <button id="learnMorePage">Learn More</button> <br><div id="characterHub"></div></div> <br><br></br><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><Br><br>'; 
+                    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body><div class="fullTopGrid"><h1>DW Thread Tracker</h1><div id="lastUpdated"></div><Br><div><button id="refreshAtlas">Refresh</button> <button id="characterEdits">Edit Character(s)</button> <button id="learnMorePage">Learn More</button><br><div id="characterHub"></div></div></div> <br><br></br><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><Br><br><script src="/atlas.js"></script>'; 
                     for (i = 0; i < fullThreadHub.length; i++){
                         html += "<div class='fullRow' style='width: 900px; grid-row-start:" + i + "'>" + fullThreadHub[i].innerHTML + '</div>';
                     }            
@@ -119,7 +122,7 @@ function update(){
     var d = new Date();
     var short = d.toLocaleString('en-US');
     updateText.style.color = "#aaa";
-    updateText.innerHTML = "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Last Updated: " + short;
+    updateText.innerHTML = "Last Updated: " + short;
         
 }
 
@@ -197,7 +200,13 @@ function characterEdits(){
  */
 
 function getDescription(x){
-    console.log('Out damn spot');
+    console.log(x);
+    var detailBox = document.getElementById(x).getElementsByClassName("popURL")[0];
+    var userTypeBox = document.createElement('textarea');
+
+    detailBox.appendChild(userTypeBox);
+    var newDescription = userTypeBox.innerText;
+    console.log(newDescription);
 }
 
 function getColor(x){
@@ -410,7 +419,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
         var nameButton = document.createElement('div');
         var titleHidden = document.createElement('div');
-        var urlButton = document.createElement('div');
+        var urlButton = document.createElement('button');
         var turnButton = document.createElement('div');
         var totalCommentsButton = document.createElement('div');
         var myCommentsButton = document.createElement('div');
@@ -483,6 +492,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         linkOut.style.backgroundColor ="rgb(241, 255, 137)";
         linkOut.style.borderRadius = "2px";
 
+        urlButton.style.border = "none";
+        urlButton.style.textAlign = "left";
+        urlButton.style.fontSize = "13px";
+        urlButton.setAttribute('id', x.threadTitle);
+
         playerNames.innerText = " with " + x.allPlayers;
            
         altNameHidden.innerText = x.altName;
@@ -501,8 +515,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         threadRow.appendChild(turnButton);
         threadRow.appendChild(totalCommentsButton);
         threadRow.appendChild(dateButton);
-        threadRow.appendChild(altNameHidden);
-        threadRow.appendChild(charColorHidden);
         threadRow.appendChild(removeThread);
         threadHub.appendChild(threadRow);
 

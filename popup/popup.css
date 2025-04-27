@@ -54,6 +54,11 @@ h1 {
     overflow: hidden;
     margin-bottom: 10px;
 }
+.fullTopGrid {
+    display: grid;
+    align-content: space-between;
+    align-items: center;
+}
 
 .fullRow {
     display: grid;

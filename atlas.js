@@ -9,6 +9,7 @@
  *  */
 
 const threads = [];
+let fullThreadHub = [];
 
 /**
  * 
@@ -48,7 +49,12 @@ document.addEventListener("click", (e) => {
                     toggle("characterHub");
                     return;
                 case "fullScreenVersion":
-                    window.open("/fullscreen.html", "_blank", "width=800,height=800,scrollbars=no");
+                    console.log(fullThreadHub);
+                    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body></body><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><Br><br>'; 
+                    for (i = 0; i < fullThreadHub.length; i++){
+                        html += "<div class='fullRow' style='width: 900px; grid-row-start:" + i + "'>" + fullThreadHub[i].innerHTML + '</div>';
+                    }            
+                    window.open('/fullscreen.html').document.write(html);                  
                     return;
                 case "learnMorePage":
                     window.open("/learnmore.html", "_blank", "width=800,height=550,scrollbars=no");
@@ -132,7 +138,44 @@ function characterEdits(){
         console.log(a1);
 
         for (i = 0; a1.length > i; i++) {
-            console.log("do u love me yes no maybe");
+            /* For every item in the array, display. */
+            
+            var newLine = document.createElement('br');
+            var colorButton = document.createElement('button');
+            var nameButton = document.createElement('button');
+            var characterName = document.createElement('span');
+            var characterRow = document.createElement('div');
+            
+            colorButton.innerHTML = 'Change Color';
+            nameButton.innerHTML = 'Change Name';
+
+            nameButton.style.gridRowStart = i + 1;
+            colorButton.style.gridRowStart = i + 2;
+            nameButton.style.gridRowStart = i + 2;
+
+            colorButton.style.width = '100px';
+            colorButton.style.padding = '5px';
+            
+            nameButton.style.padding = '5px';
+            nameButton.style.width = '100px';
+
+            characterName.style.fontSize = "16px";
+            characterName.setAttribute ("class", "journalTitle");
+
+            characterRow.style.display = "grid";
+            characterRow.style.marginLeft = "100px";
+            characterRow.style.gridTemplateColumns = "100px 100px 100px";
+            characterRow.style.gridTemplateRows = "auto auto auto";
+            characterRow.style.justifyContent = "center";
+
+            characterRow.appendChild(newLine);
+            characterRow.appendChild(characterName);
+            characterRow.appendChild(newLine);
+            characterRow.appendChild(nameButton);
+            characterRow.appendChild(colorButton);
+            characterRow.appendChild(newLine);
+            characterName.innerHTML = "<br>" + a1[i];
+            bark.appendChild(characterRow);
     }
     }
     );
@@ -350,8 +393,12 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
     let threadHub = document.querySelector('.threadHub');
     
+    
     function addToPopUp(x){
         var threadRow = document.createElement('div');
+        var fullThreadRow = document.createElement('div');
+
+        /* Little version */
 
         var nameButton = document.createElement('div');
         var titleHidden = document.createElement('div');
@@ -369,7 +416,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         var removeThread = document.createElement('div');
         var removeButton = document.createElement('button');
         
-
         threadRow.setAttribute('class','threadRow');
         threadRow.setAttribute('id', x.threadTitle);
         nameButton.setAttribute('class','popName');
@@ -387,8 +433,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         removeButton.setAttribute('id', x.threadTitle);
         removeButton.setAttribute('class','removeThread')
 
-        
-
         nameButton.innerText = x.name;
         if (x.charColor == "") {
             nameButton.style.backgroundColor = '#f5f5f5';
@@ -399,11 +443,11 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         }
 
         if (x.turn == "Their turn.") {
-            turnButton.style.backgroundColor = '#ffd9df';
+            turnButton.style.backgroundColor = '#c0c1ff';
 
         }
         else {
-            turnButton.style.backgroundColor = '#CDFF82';
+            turnButton.style.backgroundColor = '#40e0d0';
         }
 
         if (x.description == "") {
@@ -442,21 +486,113 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         urlButton.appendChild(playerNames);
 
         removeThread.appendChild(removeButton);
-        
 
         threadRow.appendChild(nameButton);
         threadRow.appendChild(titleHidden);
         threadRow.appendChild(urlButton);
         threadRow.appendChild(turnButton);
         threadRow.appendChild(totalCommentsButton);
-        threadRow.appendChild(myCommentsButton);
         threadRow.appendChild(dateButton);
         threadRow.appendChild(altNameHidden);
         threadRow.appendChild(charColorHidden);
         threadRow.appendChild(removeThread);
-
         threadHub.appendChild(threadRow);
+
+        /* Full version */
+
+        var fullnameButton = document.createElement('div');
+        var fulltitleHidden = document.createElement('div');
+        var fullurlButton = document.createElement('div');
+        var fullturnButton = document.createElement('div');
+        var fulltotalCommentsButton = document.createElement('div');
+        var fullmyCommentsButton = document.createElement('div');
+        var fulldateButton = document.createElement('div');
+        var fulldescriptionButton = document.createElement('span');
+        var fullaltNameHidden = document.createElement('div');
+        var fullcharColorHidden = document.createElement('div');
+        var fulllinkOut = document.createElement('a');
+        var fullplayerNames = document.createElement('span');
+
+        var fullremoveThread = document.createElement('div');
+        var fullremoveButton = document.createElement('button');
+
+        fullThreadRow.setAttribute('class','threadRow');
+        fullThreadRow.setAttribute('id', x.threadTitle);
+        fullnameButton.setAttribute('class','popName');
+        fulltitleHidden.setAttribute('class','popTitle');
+        fullurlButton.setAttribute('class','popURL');
+        fullturnButton.setAttribute('class','popTurn');
+        fulltotalCommentsButton.setAttribute('class','popTotal');
+        fullmyCommentsButton.setAttribute('class','popMyComments');
+        fulldateButton.setAttribute('class','popDate');
+        fulldescriptionButton.setAttribute('class','popDescription');
+        fullaltNameHidden.setAttribute('class','popAlt');
+
+        fulltitleHidden.innerText = x.threadTitle;
+        fullurlButton.innerText = descriptionButton.innerText + " @ ";
+        fullturnButton.innerText = x.turn;
+        fulltotalCommentsButton.innerText = x.totalComments;
+        fullmyCommentsButton.innerText = x.myComments;
+        fulldateButton.innerText = x.date;
+
+        fulllinkOut.innerText = x.commName + " ";
+        fulllinkOut.href = x.url;
+
+        fulllinkOut.style.textDecoration = "none";
+        fulllinkOut.style.fontStyle = "italic";
+        fulllinkOut.style.padding = "2px";
+        fulllinkOut.style.color = "black";
+        fulllinkOut.style.backgroundColor ="rgb(241, 255, 137)";
+        fulllinkOut.style.borderRadius = "2px";
+
+        fullplayerNames.innerText = " with " + x.allPlayers;
+           
+        fullaltNameHidden.innerText = x.altName;
+        fullcharColorHidden.innerText = x.charColor;
+        fullremoveButton.innerText = '🗑️';
+        fullremoveButton.style.border = 'none';
+
+        fullnameButton.innerText = x.name;
+        if (x.charColor == "") {
+            fullnameButton.style.backgroundColor = '#f5f5f5';
+
+        }
+        else {
+            fullnameButton.style.backgroundColor = x.charColor;
+        }
+
+        if (x.turn == "Their turn.") {
+            fullturnButton.style.backgroundColor = '#c0c1ff';
+
+        }
+        else {
+            fullturnButton.style.backgroundColor = '#40e0d0';
+        }
+
+        if (x.description == "") {
+            fulldescriptionButton.innerText = "Some details here";
+
+        }
+        else {
+            fulldescriptionButton.innerText  = x.description;
+        }
+
+        fullurlButton.appendChild(fulllinkOut);
+        fullurlButton.appendChild(fullplayerNames);
+
+        fullremoveThread.appendChild(fullremoveButton);
+
+        fullThreadRow.appendChild(fullnameButton);
+        fullThreadRow.appendChild(fulltitleHidden);
+        fullThreadRow.appendChild(fullurlButton);
+        fullThreadRow.appendChild(fullturnButton);
+        fullThreadRow.appendChild(fulltotalCommentsButton);
+        fullThreadRow.appendChild(fullmyCommentsButton);
+        fullThreadRow.appendChild(fulldateButton);
+        fullThreadRow.appendChild(fullremoveThread);
+        fullThreadHub.push(fullThreadRow);
     }
+
     /**
      * 
      * Check for changes in the current list of threads.
@@ -536,8 +672,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      */
 
     function nukeThis(x) {
-        console.log('The nuke has been deployed,');
-        console.log(x);
         let deleteThread = browser.storage.local.remove(x);
         deleteThread.then(() => {
             getThreads();

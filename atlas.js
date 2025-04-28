@@ -41,7 +41,8 @@ document.addEventListener("click", async (e) => {
             getDescription(bee);          
         }
 
-        else if (e.target.className == "saveDesc") {
+        else if (e.target.className == "updateDesc") {
+            console.log("trees");
             updateDesc(bee);          
         }
 
@@ -203,6 +204,11 @@ var saveDesc = document.createElement('button');
 function getDescription(x){
     console.log(x);
     var detailBox = document.getElementById(x).getElementsByClassName("popURL")[0];
+
+    userTypeBox.style.width = "90%";
+    userTypeBox.style.textAlign = "left";
+    userTypeBox.setAttribute("class", "descTextBox");
+    userTypeBox.setAttribute('id', x);
     
     saveDesc.innerText = "Update";
     saveDesc.setAttribute("class", "updateDesc");
@@ -215,28 +221,21 @@ function getDescription(x){
 }
 
 function updateDesc(x){
-    var newDescription = document.getElementById(x).getElementsByClassName("descBox").innerText;
+    var newDescription = userTypeBox.value;
     console.log(newDescription);
+
+
     var gettingAllThreads = browser.storage.local.get(null);
     gettingAllThreads.then((results) => {
         let threadsList = Object.keys(results);
+        var index = threadsList.indexOf(x);
+        let threadContents = results[0];
+        console.log(index);
+        console.log(threadContents);
 
-        /* For every item in the array, display. */
-        for (let individualThread of threadsList) {
-            let threadContents = results[individualThread];
-            if (threadContents.threadTitle = x){
-                threadContents.description = newDescription;
-
-                let storeNewThread = browser.storage.local.set({ [x] : threadContents });
-                storeNewThread.then(() => {
-                    getThreads();
-                });
-            } }})
-
-
-    
-    
-}
+        
+            })}
+       
 
 function getColor(x){
 

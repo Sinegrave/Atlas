@@ -38,12 +38,11 @@ document.addEventListener("click", async (e) => {
             }
 
         else if (e.target.className == "popURL") {
-            var elements = document.getElementsByClassName("popURL");
-            for (var i = 0; i < elements.length; i++) {
-                    console.log(bee);
-                    await getDescription(bee);
-                    
-            }              
+            getDescription(bee);          
+        }
+
+        else if (e.target.className == "saveDesc") {
+            updateDesc(bee);          
         }
 
         async function buttonToFunction(x){          
@@ -199,14 +198,44 @@ function characterEdits(){
  * 
  */
 
+var userTypeBox = document.createElement('textarea');
+var saveDesc = document.createElement('button');
 function getDescription(x){
     console.log(x);
     var detailBox = document.getElementById(x).getElementsByClassName("popURL")[0];
-    var userTypeBox = document.createElement('textarea');
-
+    
+    saveDesc.innerText = "Update";
+    saveDesc.setAttribute("class", "updateDesc");
+    saveDesc.setAttribute('id', x);
+    
     detailBox.appendChild(userTypeBox);
-    var newDescription = userTypeBox.innerText;
+    detailBox.appendChild(saveDesc);
+    detailBox.setAttribute("class", "descBox");
+        
+}
+
+function updateDesc(x){
+    var newDescription = document.getElementById(x).getElementsByClassName("descBox").innerText;
     console.log(newDescription);
+    var gettingAllThreads = browser.storage.local.get(null);
+    gettingAllThreads.then((results) => {
+        let threadsList = Object.keys(results);
+
+        /* For every item in the array, display. */
+        for (let individualThread of threadsList) {
+            let threadContents = results[individualThread];
+            if (threadContents.threadTitle = x){
+                threadContents.description = newDescription;
+
+                let storeNewThread = browser.storage.local.set({ [x] : threadContents });
+                storeNewThread.then(() => {
+                    getThreads();
+                });
+            } }})
+
+
+    
+    
 }
 
 function getColor(x){

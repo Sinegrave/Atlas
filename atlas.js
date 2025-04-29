@@ -32,7 +32,6 @@ document.addEventListener("click", async (e) => {
         if (e.target.className == "removeThread") {
         var elements = document.getElementsByClassName("removeThread");
             for (var i = 0; i < elements.length; i++) {
-                console.log(bee);
                 nukeThis(bee); 
             }
             }
@@ -42,7 +41,6 @@ document.addEventListener("click", async (e) => {
         }
 
         else if (e.target.className == "updateDesc") {
-            console.log("trees");
             updateDesc(bee);          
         }
 
@@ -60,7 +58,6 @@ document.addEventListener("click", async (e) => {
                     toggle("characterHub");
                     return;
                 case "fullScreenVersion":
-                    console.log(fullThreadHub);
                     var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body><div class="fullTopGrid"><h1>DW Thread Tracker</h1><div id="lastUpdated"></div><Br><div><button id="refreshAtlas">Refresh</button> <button id="characterEdits">Edit Character(s)</button> <button id="learnMorePage">Learn More</button><br><div id="characterHub"></div></div></div> <br><br></br><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><Br><br><script src="/atlas.js"></script>'; 
                     for (i = 0; i < fullThreadHub.length; i++){
                         html += "<div class='fullRow' style='width: 900px; grid-row-start:" + i + "'>" + fullThreadHub[i].innerHTML + '</div>';
@@ -146,7 +143,6 @@ function characterEdits(){
 
         let s = new Set(journalList);
         let a1 = [...s]
-        console.log(a1);
 
         for (i = 0; a1.length > i; i++) {
             /* For every item in the array, display. */
@@ -202,7 +198,6 @@ function characterEdits(){
 var userTypeBox = document.createElement('textarea');
 var saveDesc = document.createElement('button');
 function getDescription(x){
-    console.log(x);
     var detailBox = document.getElementById(x).getElementsByClassName("popURL")[0];
 
     userTypeBox.style.width = "90%";
@@ -222,7 +217,6 @@ function getDescription(x){
 
 function updateDesc(x){
     var newDescription = userTypeBox.value;
-    console.log(newDescription);
 
     var gettingAllThreads = browser.storage.local.get(null);
     gettingAllThreads.then((results) => {
@@ -230,7 +224,6 @@ function updateDesc(x){
         var index = threadsList.indexOf(x);
         let target = results[threadsList[index]];
         target.description = newDescription;
-        console.log(target.description);
 
         threadsList[index].description = newDescription;
         let storeNewThread = browser.storage.local.set({ [x] : target });
@@ -387,7 +380,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         const classy = "topLink";
         var butter = entryTitle[0].getElementsByTagName("a");
         var nut = butter[0].href;
-        console.log(nut);
         if (x !== undefined && x !== null){
             node.setAttribute("id", nut);
             node.setAttribute("class", classy);
@@ -506,6 +498,7 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             descriptionButton.innerText  = x.description;
         }
 
+        descriptionButton.style.fontWeight = "bold";
         titleHidden.innerText = x.threadTitle;
         urlButton.innerText = descriptionButton.innerText + " @ ";
         turnButton.innerText = x.turn;
@@ -653,7 +646,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         var gettingAllThreads = browser.storage.local.get(null);
         gettingAllThreads.then(async (results) => {
             let threadsList = Object.keys(results);
-            console.log(threadsList);
             /* For every item in the array, display. */
             for (let individualThread of threadsList) {
                 let threadContents = results[individualThread];
@@ -662,7 +654,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
                 xhttp.responseType = "document";
                 xhttp.onload = function(){
                     var blockText = xhttp.response;
-                    console.log(getTotalComments(blockText));
                     }
                 xhttp.send();
                 }
@@ -681,7 +672,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
         var gettingAllThreads = browser.storage.local.get(null);
         gettingAllThreads.then((results) => {
             let threadsList = Object.keys(results);
-            console.log(threadsList);
             /* For every item in the array, display. */
             for (let individualThread of threadsList) {
                 let threadContents = results[individualThread];
@@ -696,11 +686,38 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
      */
 
     function storeThread(x, y) {
-        let storeNewThread = browser.storage.local.set({ [x] : y });
-        storeNewThread.then(() => {
-            getThreads();
-        });
+        var gettingAllThreads = browser.storage.local.get(null);
+        gettingAllThreads.then((results) => {
+            var newTurns = y.turn;
+            var newComments = y.totalComments;
+            var newMyComments = y.myComments;
+            let threadsList = Object.keys(results);
+            var index = threadsList.indexOf(x);
 
+            /* If the thread already exists, just update the comment count. */
+                if (index > -1){
+                    let target = results[threadsList[index]];
+                    target.turn = newTurns;
+                    target.totalComments = newComments;
+                    target.myComments = newMyComments;
+                    let storeNewThread = browser.storage.local.set({ [x] : target });
+                    storeNewThread.then(() => {
+                        getThreads();
+                    });
+                }
+
+                else {
+                    let storeNewThread = browser.storage.local.set({ [x] : y });
+                    storeNewThread.then(() => {
+                        getThreads();
+                    });
+                }
+
+               
+            
+
+                
+        })
     }
 
     /** 
@@ -795,7 +812,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
 
             /* Adds this thread to the array of threads. */
             threads.push(a); 
-            console.log(a);
 
             /* Stores the array in local storage. */
             storeThread(threadTitle, a);  
@@ -814,23 +830,17 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
       async function goToFirstComment(x){
         var link;
         var butterfly = [];
-        console.log(x);
         return new Promise((resolve) => {
             createRequest(getParent(x, document));
                 function getParent(x, z){
                     var snail = z.getElementById("comment-" + x).getElementsByClassName("link commentparent");
-                    console.log(snail);
+                    
 
                     if (snail[0] == undefined){
                        var grub = z.getElementById("comment-" + x).getElementsByClassName("commentpermalink")[0];
-
-
-                       console.log(z.getElementById("comment-" + x));
-                       console.log(z.getElementById("comment-" + x).getElementsByClassName("commentpermalink")[0]);
                        var beast =  grub.getElementsByTagName("a")[0];
                        butterfly[0] = beast.href;
                        butterfly[1] = x;
-                       console.log(butterfly);
                     }
                     else if (snail[0] != undefined)  {
                         butterfly[0] = snail[0].getElementsByTagName("a")[0];
@@ -850,7 +860,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
                        var breech = blockText.getElementById("comment-" + id).getElementsByClassName("link commentparent");
                        if ( breech[0] == undefined){
                           link = blockText;
-                          console.log(link);
                           resolve(link);
                        }
                        else {
@@ -928,7 +937,6 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
     /* Obtain name name of the community where the thread is occuring. */
     function getCommName(x){
         var bread = x.getElementsByClassName("ljuser")[1].innerText;
-        console.log(bread);
         return bread;
     }
 
@@ -949,6 +957,5 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             
             i++}
         var butt = names.slice(0, names.length-2);
-        console.log(butt);
         return butt;
     }

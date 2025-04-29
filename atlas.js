@@ -224,17 +224,20 @@ function updateDesc(x){
     var newDescription = userTypeBox.value;
     console.log(newDescription);
 
-
     var gettingAllThreads = browser.storage.local.get(null);
     gettingAllThreads.then((results) => {
         let threadsList = Object.keys(results);
         var index = threadsList.indexOf(x);
-        let threadContents = results[0];
-        console.log(index);
-        console.log(threadContents);
+        let target = results[threadsList[index]];
+        target.description = newDescription;
+        console.log(target.description);
 
-        
-            })}
+        threadsList[index].description = newDescription;
+        let storeNewThread = browser.storage.local.set({ [x] : target });
+        storeNewThread.then(() => {
+            getThreads();
+            location.reload();
+            });})}
        
 
 function getColor(x){

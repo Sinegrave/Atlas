@@ -89,7 +89,9 @@ h1 {
     grid-template-rows: fit-content;
     align-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    border-bottom: #aaa dotted 1px;
     justify-items: center;
     grid-auto-flow: row;
 }

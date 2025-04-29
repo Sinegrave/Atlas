@@ -54,15 +54,14 @@ document.addEventListener("click", async (e) => {
                         update();
                     }
                     return;
+                case "refreshBigAtlas":
+                    location.reload();  
+                    return;
                 case "characterEdits":
                     toggle("characterHub");
                     return;
                 case "fullScreenVersion":
-                    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body><div class="fullTopGrid"><h1>DW Thread Tracker</h1><div id="lastUpdated"></div><Br><div><button id="refreshAtlas">Refresh</button> <button id="characterEdits">Edit Character(s)</button> <button id="learnMorePage">Learn More</button><br><div id="characterHub"></div></div></div> <br><br></br><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><Br><br><script src="/atlas.js"></script>'; 
-                    for (i = 0; i < fullThreadHub.length; i++){
-                        html += "<div class='fullRow' style='width: 900px; grid-row-start:" + i + "'>" + fullThreadHub[i].innerHTML + '</div>';
-                    }            
-                    window.open('/fullscreen.html').document.write(html);                  
+                    fullscreen();              
                     return;
                 case "learnMorePage":
                     window.open("/learnmore.html", "_blank", "width=800,height=550,scrollbars=no");
@@ -121,6 +120,15 @@ function update(){
     updateText.style.color = "#aaa";
     updateText.innerHTML = "Last Updated: " + short;
         
+}
+
+function fullscreen(){
+    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/popup/popup.css"><title>DW Thread Tracker </title><link rel="icon" type="image/x-icon" href="/icons/cd.png"><style> body { width: 900px; } </style></head><body><div class="fullTopGrid"><h1>DW Thread Tracker</h1><div id="lastUpdated"></div></div> <br><div class="fullRow" style="justify-content: space-between; border-bottom: grey solid 1px; padding-bottom: 3px;"><div class="fullName" style="border: none;"><B>Journal Name</B></div><div class="fullURL"><B>Thread <br>Details</B></div><div class="fullTurn"><B>Turn</B></div><div class="fullTotalComments"><B>Total<bR> Comments</B></div><div class="fullMyComments"><B>My<bR> Comments</B></div><div class="fullDate"><B>Date <br>Started</B></div><div class="fullDelete"><B>🗑️</B></div></div><script src="/atlas.js"></script>'; 
+                    for (i = 0; i < fullThreadHub.length; i++){
+                        html += "<div class='fullRow' style='width: 900px; grid-row-start:" + i + "'>" + fullThreadHub[i].innerHTML + '</div>';
+                    }            
+                    window.open('/fullscreen.html').document.write(html);    
+
 }
 
 /**
@@ -486,6 +494,14 @@ function NewThread (name, threadTitle, url, turn, totalComments, myComments, dat
             turnButton.style.backgroundColor = '#c0c1ff';
 
         }
+        else if (x.turn == "Wrapped.") {
+            turnButton.style.backgroundColor ='rgb(230, 193, 116)';
+        }
+
+        else if (x.turn == "Stalking.") {
+            turnButton.style.backgroundColor ='rgb(224, 194, 230)';
+        }
+
         else {
             turnButton.style.backgroundColor = '#40e0d0';
         }
